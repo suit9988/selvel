@@ -1,17 +1,16 @@
+<?php
+include_once 'include/functions.php';
+$functions = new Functions();
 
-<?php 
-	include_once 'include/functions.php';
-	$functions = new Functions(); 
-	
-	include_once("include/classes/Email.class.php");
+include_once("include/classes/Email.class.php");
 
-	if(isset($_POST['prodemail'])) {
-		$email = $functions->escape_string($functions->strip_all($_POST['prodemail']));
-		$notify_prod_id = $functions->escape_string($functions->strip_all($_POST['notify_prod_id']));
-		$notify_prod_size = $functions->escape_string($functions->strip_all($_POST['notify_prod_size']));
-		$query = $functions->query("INSERT INTO ".PREFIX."subscription (email, product_id, size_id) values ('".$email."', '".$notify_prod_id."', '".$notify_prod_size."')");
-		$emailObj = new Email();
-		$mailBody = "
+if (isset($_POST['prodemail'])) {
+    $email = $functions->escape_string($functions->strip_all($_POST['prodemail']));
+    $notify_prod_id = $functions->escape_string($functions->strip_all($_POST['notify_prod_id']));
+    $notify_prod_size = $functions->escape_string($functions->strip_all($_POST['notify_prod_size']));
+    $query = $functions->query("INSERT INTO " . PREFIX . "subscription (email, product_id, size_id) values ('" . $email . "', '" . $notify_prod_id . "', '" . $notify_prod_size . "')");
+    $emailObj = new Email();
+    $mailBody = "
 		<p>
 		Dear Customer
 		<br>
@@ -20,62 +19,62 @@
 		<br>For any other queries or requests, please write to us at <a href='mailto:info@selvel.com'> info@selvel.com</a>.
 		</p>";
 
-		$emailObj->setEmailBody($mailBody);
-		$emailObj->setSubject(SITE_NAME." | Thank You Subscribe to Selvel");
-		$emailObj->setAddress($_POST['prodemail']);
-		//$adminemail = $functions->getAdminEmail();
-		//$emailObj->setAdminAddress($adminemail);
-		$res = $emailObj->sendEmail();
-	}
+    $emailObj->setEmailBody($mailBody);
+    $emailObj->setSubject(SITE_NAME . " | Thank You Subscribe to Selvel");
+    $emailObj->setAddress($_POST['prodemail']);
+    //$adminemail = $functions->getAdminEmail();
+    //$emailObj->setAdminAddress($adminemail);
+    $res = $emailObj->sendEmail();
+}
 
-	$permalink = '';
-	if(!isset($_GET['permalink']) || empty($_GET['permalink'])) {
-		header("location: ".BASE_URL);
-		exit;
-	}
+$permalink = '';
+if (!isset($_GET['permalink']) || empty($_GET['permalink'])) {
+    header("location: " . BASE_URL);
+    exit;
+}
 
-	$permalink = $functions->strip_all($_GET['permalink']);
-	$getProductsizeDetails = $functions->getProductBySizePermalink($permalink);
-	$productDetails = $functions->getUniqueProductById($getProductsizeDetails['product_id']);
-	if(!$productDetails) {
-		header("location".BASE_URL."/not-found.php");
-		exit;
-	}
+$permalink = $functions->strip_all($_GET['permalink']);
+$getProductsizeDetails = $functions->getProductBySizePermalink($permalink);
+$productDetails = $functions->getUniqueProductById($getProductsizeDetails['product_id']);
+if (!$productDetails) {
+    header("location" . BASE_URL . "/not-found.php");
+    exit;
+}
 
-	$pageTitle = !empty($productDetails['page_title']) ? $productDetails['page_title'] : $productDetails['product_name'];
-	$meta_keyword = !empty($productDetails['meta_keyword']) ? $productDetails['meta_keyword'] : $productDetails['product_name'];
-	$meta_description = !empty($productDetails['meta_description']) ? $productDetails['meta_description'] : $productDetails['product_name'];
-	$sne_p_id=$productDetails['id'];
+$pageTitle = !empty($productDetails['page_title']) ? $productDetails['page_title'] : $productDetails['product_name'];
+$meta_keyword = !empty($productDetails['meta_keyword']) ? $productDetails['meta_keyword'] : $productDetails['product_name'];
+$meta_description = !empty($productDetails['meta_description']) ? $productDetails['meta_description'] : $productDetails['product_name'];
+$sne_p_id = $productDetails['id'];
 
-	$sne_qry = "SELECT * FROM ".PREFIX."product_subcategory_mapping WHERE product_id='".$sne_p_id."'";
-	$sne_f = $functions->query($sne_qry);
-	$sne_row = $functions->fetch($sne_f);
-	$cc_id=$sne_row['category_id'];
-	$ss_id=$sne_row['subscategory_id'];
+$sne_qry = "SELECT * FROM " . PREFIX . "product_subcategory_mapping WHERE product_id='" . $sne_p_id . "'";
+$sne_f = $functions->query($sne_qry);
+$sne_row = $functions->fetch($sne_f);
+$cc_id = $sne_row['category_id'];
+$ss_id = $sne_row['subscategory_id'];
 
-	$sql_cat1 = "select * from ".PREFIX."category_master where id='$cc_id'";
-	$results_cat1 = $functions->query($sql_cat1);
-	$row_cat1 = $functions->fetch($results_cat1);
-	$row_cat1['category_name'];
+$sql_cat1 = "select * from " . PREFIX . "category_master where id='$cc_id'";
+$results_cat1 = $functions->query($sql_cat1);
+$row_cat1 = $functions->fetch($results_cat1);
+$row_cat1['category_name'];
 
-	$sql_cat2 = "select * from ".PREFIX."sub_category_master where id='$ss_id'";
-	$results_cat2 = $functions->query($sql_cat2);
-	$row_cat2 = $functions->fetch($results_cat2);
-	$row_cat2['category_name'];
-	//exit();
+$sql_cat2 = "select * from " . PREFIX . "sub_category_master where id='$ss_id'";
+$results_cat2 = $functions->query($sql_cat2);
+$row_cat2 = $functions->fetch($results_cat2);
+$row_cat2['category_name'];
+//exit();
 
-	$ratingsRS = $functions->getRatingByProductId($productDetails['id']);
+$ratingsRS = $functions->getRatingByProductId($productDetails['id']);
 
-	$ip = $_SERVER['REMOTE_ADDR'];
-	$ipCheckSql = "SELECT * FROM ".PREFIX."product_views WHERE ip='".$ip."' and product_id='".$productDetails['id']."'";
-	$ipCheckRes = $functions->query($ipCheckSql);
-	if($functions->num_rows($ipCheckRes)==0) {
-		$ipInSql = "INSERT INTO ".PREFIX."product_views (product_id, views, ip) VALUES ('".$productDetails['id']."','1','".$ip."')";
-		$queryIp = $functions->query($ipInSql);
-		$functions->query("update ".PREFIX."product_master set total_views=total_views+1 where id='".$productDetails['id']."'");
-	}
-   
-	/* if(isset($_POST['color']) && isset($_POST['size'])) {
+$ip = $_SERVER['REMOTE_ADDR'];
+$ipCheckSql = "SELECT * FROM " . PREFIX . "product_views WHERE ip='" . $ip . "' and product_id='" . $productDetails['id'] . "'";
+$ipCheckRes = $functions->query($ipCheckSql);
+if ($functions->num_rows($ipCheckRes) == 0) {
+    $ipInSql = "INSERT INTO " . PREFIX . "product_views (product_id, views, ip) VALUES ('" . $productDetails['id'] . "','1','" . $ip . "')";
+    $queryIp = $functions->query($ipInSql);
+    $functions->query("update " . PREFIX . "product_master set total_views=total_views+1 where id='" . $productDetails['id'] . "'");
+}
+
+/* if(isset($_POST['color']) && isset($_POST['size'])) {
 		$getProductsizeDetails = $functions->fetch($functions->query("SELECT * FROM ".PREFIX."product_sizes WHERE product_id='".$productDetails['id']."' AND size='".$_POST['size']."' and productcolor='".$_POST['color']."' ORDER BY id ASC LIMIT 1"));
 		if(!$getProductsizeDetails) {
 			$getProductsizeDetails = $functions->fetch($functions->query("SELECT * FROM ".PREFIX."product_sizes WHERE product_id='".$productDetails['id']."' AND size='".$_POST['size']."' ORDER BY id ASC LIMIT 1"));
@@ -85,181 +84,201 @@
 		$getProductsizeDetails = $functions->fetch($functions->query("SELECT * FROM ".PREFIX."product_sizes WHERE product_id='".$productDetails['id']."' ORDER BY id ASC LIMIT 1"));
 		$color='';
 	} */
-	$show_sidebar = "yes";
+$show_sidebar = "yes";
 ?>
 <!DOCTYPE>
 
 <html>
-	<head>
-		<title><?php echo $pageTitle; ?></title>
-		<meta name="description" content="<?php echo $meta_description; ?>">
-		<meta name="keywords" content="<?php echo $meta_keyword; ?>">
-		<meta name="author" content="SELVEL">
-		<?php include("include/header-link.php");?>
-		<style>
-		label.btn.colo-btn {
-   border: none;
-}
-		.mySlides {display:none}
-.w3-left, .w3-right, .w3-badge {cursor:pointer}
-.w3-badge {height:13px;width:13px;padding:0}
-			label.btn.colo-btn.active:after {
-				content: "";
-				position: absolute;
-				width: 17px;
-				height: 17px;
-				border: 1px solid #441893;
-				top: 0px;
-				left: -1px;
-				border-radius: 50px;
-			}
-			button#cartBtn {
-				margin-left: 8%;
-				width: 100%;
-				border-radius: 9px;
-				padding: 9px;
-				background: #fff;
-				border-color: var(--purple);
-			}
-			form.delivery-form input {
-				width: 544px !important;
-			}
-			.slick-slider {
-				position: relative;
-				display: contents;
-			}
-			#gallery_01 .slick-slide{
-				width:120px !important;
-			}
-			
-			.my_margin
-			{
-			    margin: 20px 0;
-			    padding: 20px 0;
-			}
-			.btn_margin
-			{
-			    margin-top: 120px;
-			    padding: 20px 0;
-			}
-			.center_wala
-			{
-			    justify-content:center;
-			}
-		</style>
-	</head>
 
-	<body class="inner-page" id="details-page" onLoad="preLoad()">
-		<!--Top start menu head-->
-		<?php include("include/header.php");?>
-		<!--Main Start Code Here-->
-		<main class="main-inner-div">       
-			<div class="container breadcum-header">
-				<ul>
-					<li>
-						<a href="<?php echo BASE_URL; ?>">Home</a>
-						<i class="fa fa-angle-right"></i>
-					</li>
-					<li>
-						<a href="<?php echo BASE_URL; ?>/<?php echo 	 $row_cat1['permalink']; ?>"><?php echo 	 $row_cat1['category_name']; ?></a>
-						<i class="fa fa-angle-right"></i>
-					</li>
-					<li>
-						<a href="<?php echo BASE_URL; ?>/<?php echo 	 $row_cat1['permalink']; ?>/<?php echo 	 $row_cat2['permalink']; ?>" ><?php echo 	 $row_cat2['category_name']; ?></a>  
-					</li>
-				</ul>
-			</div>
-			<section class="details-section paddbothzero" id="details-section-sub">
-				<div class="container">
-					<div class="flexprodus"> 
+<head>
+    <title><?php echo $pageTitle; ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>">
+    <meta name="keywords" content="<?php echo $meta_keyword; ?>">
+    <meta name="author" content="SELVEL">
+    <?php include("include/header-link.php"); ?>
+    <style>
+        label.btn.colo-btn {
+            border: none;
+        }
 
-						<div class="col-md-sms1">
-							
-						</div>
-						<div class="col-md-sms5 zoombox">
-							<div class="zoom-gallery">
-								<?php
-									if($getProductsizeDetails['image1_color']) {
-										$file_name = str_replace('', '-', strtolower( pathinfo($getProductsizeDetails['image1_color'], PATHINFO_FILENAME)));
-										$ext = pathinfo($getProductsizeDetails['image1_color'], PATHINFO_EXTENSION);
-								?>
-										<img id="zoom_03" src="<?php echo BASE_URL.'/images/products/'.$file_name.'_crop.'.$ext; ?>" data-zoom-image="<?php echo BASE_URL.'/images/products/'.$file_name.'_crop.'.$ext; ?>" width="100%" />
-										
-								<?php
-									}
-								?>
-							</div>
-							
-							<div class="imga-galsa">
-								<div id="gallery_01" style="display:flex" >
-									<?php
-										$imageFields = array('image1_color', 'image2_color', 'image3_color', 'image4_color', 'image5_color', 'image6_color', 'image7_color', 'image8_color');
-										$i=1;
-										$ii=0;
+        .mySlides {
+            display: none
+        }
 
-										foreach($imageFields as $oneField) {
-											if(!empty($getProductsizeDetails[$oneField])) {
-												$file_name = str_replace('', '-', strtolower( pathinfo($getProductsizeDetails[$oneField], PATHINFO_FILENAME)));
-												$ext = pathinfo($getProductsizeDetails[$oneField], PATHINFO_EXTENSION);
-									?>
-												<div>
-													<a href="#" class="elevatezoom-gallery <?php if($i++==1) { echo "active"; } ?>" data-update="" data-image="<?php echo BASE_URL.'/images/products/'.$file_name.'_crop.'.$ext; ?>" data-zoom-image="<?php echo BASE_URL.'/images/products/'.$file_name.'_crop.'.$ext; ?>">
-														<img src="<?php echo BASE_URL.'/images/products/'.$file_name.'_crop.'.$ext; ?>" width="100" />
-													</a>
-												</div>
-									<?php
-											}
-											$ii++;
-										}
-									?> 
-								</div>
-							</div>
-						</div>
-						<div class="col-md-sms6">
-							<div class="descidetails">
-								<h2 class="product-name"><?php echo ucwords($productDetails['product_name']); ?>  
-									<span class="codeprosu">| <?php echo $getProductsizeDetails['size'];; ?></span>
-								</h2>								
-								<ul class="review-result-strip list-inline mainlist-top">
-									<li class="match">
-										<span class="ratingSpan star<?php echo str_replace(".","",$productDetails['avg_rating']);  ?>"> </span>
-									<span class="ratingcon"><span class="cntprod">(<?php echo $functions->num_rows($ratingsRS); ?>)</span>
-										<!-- </div> -->
-									</span>
-									</li>
-								</ul>
-								<div class="mobileflexx" id="">
-									<?php /*<div class="product-copdes">
+        .w3-left,
+        .w3-right,
+        .w3-badge {
+            cursor: pointer
+        }
+
+        .w3-badge {
+            height: 13px;
+            width: 13px;
+            padding: 0
+        }
+
+        label.btn.colo-btn.active:after {
+            content: "";
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            border: 1px solid #441893;
+            top: 0px;
+            left: -1px;
+            border-radius: 50px;
+        }
+
+        button#cartBtn {
+            margin-left: 8%;
+            width: 100%;
+            border-radius: 9px;
+            padding: 9px;
+            background: #fff;
+            border-color: var(--purple);
+        }
+
+        form.delivery-form input {
+            width: 544px !important;
+        }
+
+        .slick-slider {
+            position: relative;
+            display: contents;
+        }
+
+        #gallery_01 .slick-slide {
+            width: 120px !important;
+        }
+
+        .my_margin {
+            margin: 20px 0;
+            padding: 20px 0;
+        }
+
+        .btn_margin {
+            margin-top: 120px;
+            padding: 20px 0;
+        }
+
+        .center_wala {
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="inner-page" id="details-page" onLoad="preLoad()">
+    <!--Top start menu head-->
+    <?php include("include/header.php"); ?>
+    <!--Main Start Code Here-->
+    <main class="main-inner-div">
+        <div class="container breadcum-header">
+            <ul>
+                <li>
+                    <a href="<?php echo BASE_URL; ?>">Home</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="<?php echo BASE_URL; ?>/<?php echo      $row_cat1['permalink']; ?>"><?php echo      $row_cat1['category_name']; ?></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="<?php echo BASE_URL; ?>/<?php echo      $row_cat1['permalink']; ?>/<?php echo      $row_cat2['permalink']; ?>"><?php echo      $row_cat2['category_name']; ?></a>
+                </li>
+            </ul>
+        </div>
+        <section class="details-section paddbothzero" id="details-section-sub">
+            <div class="container">
+                <div class="flexprodus">
+
+                    <div class="col-md-sms1">
+
+                    </div>
+                    <div class="col-md-sms5 zoombox">
+                        <div class="zoom-gallery">
+                            <?php
+                            if ($getProductsizeDetails['image1_color']) {
+                                $file_name = str_replace('', '-', strtolower(pathinfo($getProductsizeDetails['image1_color'], PATHINFO_FILENAME)));
+                                $ext = pathinfo($getProductsizeDetails['image1_color'], PATHINFO_EXTENSION);
+                            ?>
+                                <img id="zoom_03" src="<?php echo BASE_URL . '/images/products/' . $file_name . '_crop.' . $ext; ?>" data-zoom-image="<?php echo BASE_URL . '/images/products/' . $file_name . '_crop.' . $ext; ?>" width="100%" />
+
+                            <?php
+                            }
+                            ?>
+                        </div>
+
+                        <div class="imga-galsa">
+                            <div id="gallery_01" style="display:flex">
+                                <?php
+                                $imageFields = array('image1_color', 'image2_color', 'image3_color', 'image4_color', 'image5_color', 'image6_color', 'image7_color', 'image8_color');
+                                $i = 1;
+                                $ii = 0;
+
+                                foreach ($imageFields as $oneField) {
+                                    if (!empty($getProductsizeDetails[$oneField])) {
+                                        $file_name = str_replace('', '-', strtolower(pathinfo($getProductsizeDetails[$oneField], PATHINFO_FILENAME)));
+                                        $ext = pathinfo($getProductsizeDetails[$oneField], PATHINFO_EXTENSION);
+                                ?>
+                                        <div>
+                                            <a href="#" class="elevatezoom-gallery <?php if ($i++ == 1) {
+                                                                                        echo "active";
+                                                                                    } ?>" data-update="" data-image="<?php echo BASE_URL . '/images/products/' . $file_name . '_crop.' . $ext; ?>" data-zoom-image="<?php echo BASE_URL . '/images/products/' . $file_name . '_crop.' . $ext; ?>">
+                                                <img src="<?php echo BASE_URL . '/images/products/' . $file_name . '_crop.' . $ext; ?>" width="100" />
+                                            </a>
+                                        </div>
+                                <?php
+                                    }
+                                    $ii++;
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-sms6">
+                        <div class="descidetails">
+                            <h2 class="product-name"><?php echo ucwords($productDetails['product_name']); ?>
+                                <span class="codeprosu">| <?php echo $getProductsizeDetails['size'];; ?></span>
+                            </h2>
+                            <ul class="review-result-strip list-inline mainlist-top">
+                                <li class="match">
+                                    <span class="ratingSpan star<?php echo str_replace(".", "", $productDetails['avg_rating']);  ?>"> </span>
+                                    <span class="ratingcon"><span class="cntprod">(<?php echo $functions->num_rows($ratingsRS); ?>)</span>
+                                        <!-- </div> -->
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="mobileflexx" id="">
+                                <?php /*<div class="product-copdes">
 										<span>Product code : <?php echo ucwords($productDetails['product_code']); ?></span> |
 										<span>HSN code : <?php echo ucwords($productDetails['hsn_code']); ?></span>
-									</div>*/?>
-									<div class="mrpdivfloat">
-									<?php
-										if(isset($getProductsizeDetails['customer_discount_price']) && !empty($getProductsizeDetails['customer_discount_price'])) {
-											$percentDiscount = round(($getProductsizeDetails['customer_price'] - $getProductsizeDetails['customer_discount_price']) / $getProductsizeDetails['customer_price'] * 100);
-									?>
-											
-											<span class="mainprice">
-												<span  style="color: #5C5C5C"><i class="fa fa-rupee"  style="color: #5C5C5C"></i> <?php echo $getProductsizeDetails['customer_discount_price'] ?></span>
-											</span>
-										 	
-											<span class="mrpprice" style="font-size: 20px;">
-												<span style="color: #C2C2C2"><i class="fa fa-rupee" style="color: #C2C2C2"></i> <?php echo $getProductsizeDetails['customer_price'] ?></span>
-											</span>
-																					
-											<span class="discountpricesp" style="font-size: 14px; color: #f00">
-												(<?php echo $percentDiscount ?>% off Discount)
-											</span>
-									<?php 
-										} else {
-									?>
-											<span class="mainprice">
-												Price :<span><i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_price'] ?></span>
-											</span>
-									<?php
-										}
-										?>
-									<?php /*	
+									</div>*/ ?>
+                                <div class="mrpdivfloat">
+                                    <?php
+                                    if (isset($getProductsizeDetails['customer_discount_price']) && !empty($getProductsizeDetails['customer_discount_price'])) {
+                                        $percentDiscount = round(($getProductsizeDetails['customer_price'] - $getProductsizeDetails['customer_discount_price']) / $getProductsizeDetails['customer_price'] * 100);
+                                    ?>
+
+                                        <span class="mainprice">
+                                            <span style="color: #5C5C5C"><i class="fa fa-rupee" style="color: #5C5C5C"></i> <?php echo $getProductsizeDetails['customer_discount_price'] ?></span>
+                                        </span>
+
+                                        <span class="mrpprice" style="font-size: 20px;">
+                                            <span style="color: #C2C2C2"><i class="fa fa-rupee" style="color: #C2C2C2"></i> <?php echo $getProductsizeDetails['customer_price'] ?></span>
+                                        </span>
+
+                                        <span class="discountpricesp" style="font-size: 14px; color: #f00">
+                                            (<?php echo $percentDiscount ?>% off Discount)
+                                        </span>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <span class="mainprice">
+                                            Price :<span><i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_price'] ?></span>
+                                        </span>
+                                    <?php
+                                    }
+                                    ?>
+                                    <?php /*	
 
 										if($getProductsizeDetails['available_qty']>0) {
 									?>
@@ -270,229 +289,237 @@
 											<span class="outofstockstatus">Sold Out</span>									
 									<?php
 										}*/
-									?>
-									<?php /* <span class="outofstockstatus "> <!-- add class instock for stock -->
+                                    ?>
+                                    <?php /* <span class="outofstockstatus "> <!-- add class instock for stock -->
 										Out Of Stock
 									</span> */ ?>
-								</div>
-									
-									<div class="" id="divsamecolors">
-										<form id="formcolorsizebox" method="POST">
-											<?php 
-												if($getProductsizeDetails['productcolor']) {
-											?>
-											<div class="color-boxes" style="justify-content: end;">
-												
-												
+                                </div>
 
-												<?php
-													$sne_qry_col_dis = "SELECT * FROM ".PREFIX."product_sizes WHERE product_id='".$productDetails['id']."' and size='".$getProductsizeDetails['size']."'";
-													$sne_f_col_dis = $functions->query($sne_qry_col_dis);
-													while($sne_row_col_dis = $functions->fetch($sne_f_col_dis)) {
-														$sne_col= $sne_row_col_dis['productcolor'];
-														$sne_qry_col = "SELECT * FROM ".PREFIX."color_master WHERE color='".$sne_col."'";
-														$sne_f_col = $functions->query($sne_qry_col);
-														$sne_row_col = $functions->fetch($sne_f_col);
-														$cc_id_col=$sne_row_col['image'];
-														$ss1= BASE_URL."/images/color/".$cc_id_col;
+                                <div class="" id="divsamecolors">
+                                    <form id="formcolorsizebox" method="POST">
+                                        <?php
+                                        if ($getProductsizeDetails['productcolor']) {
+                                        ?>
+                                            <div class="color-boxes" style="justify-content: end;">
 
-														$productSizePermalink = $functions->getProductDetailPageURL($productDetails['id'], $sne_row_col_dis['id']);
-												?>
-														<span class="color-box-input" data-toggle="buttons">
-															<label class="btn colo-btn <?php if($sne_row_col_dis['productcolor']==$getProductsizeDetails['productcolor']) { ?>active<?php } ?>" style="background-image: url('<?php echo $ss1; ?>')">
-																<input data-url="<?php echo BASE_URL; ?>/<?php echo $productSizePermalink ?>" type="radio" name="color" id="<?php echo $sne_col; ?>"  value="<?php echo $sne_col; ?>" autocomplete="off" <?php if($sne_row_col_dis['productcolor']==$getProductsizeDetails['productcolor']) { ?>checked<?php } ?>>
-																<?php if($sne_row_col_dis['productcolor']==$getProductsizeDetails['productcolor']) { ?>
-																	<span class="fa fa-check"></span>
-																<?php } ?>
-															</label>
-														</span>
-												<?php
-													}
-												?>
-											</div>
 
-											<div class="size-boxes" style="justify-content: end; margin-top: 26px;">
-												
-												<?php /* 
+
+                                                <?php
+                                                $sne_qry_col_dis = "SELECT * FROM " . PREFIX . "product_sizes WHERE product_id='" . $productDetails['id'] . "' and size='" . $getProductsizeDetails['size'] . "'";
+                                                $sne_f_col_dis = $functions->query($sne_qry_col_dis);
+                                                while ($sne_row_col_dis = $functions->fetch($sne_f_col_dis)) {
+                                                    $sne_col = $sne_row_col_dis['productcolor'];
+                                                    $sne_qry_col = "SELECT * FROM " . PREFIX . "color_master WHERE color='" . $sne_col . "'";
+                                                    $sne_f_col = $functions->query($sne_qry_col);
+                                                    $sne_row_col = $functions->fetch($sne_f_col);
+                                                    $cc_id_col = $sne_row_col['image'];
+                                                    $ss1 = BASE_URL . "/images/color/" . $cc_id_col;
+
+                                                    $productSizePermalink = $functions->getProductDetailPageURL($productDetails['id'], $sne_row_col_dis['id']);
+                                                ?>
+                                                    <span class="color-box-input" data-toggle="buttons">
+                                                        <label class="btn colo-btn <?php if ($sne_row_col_dis['productcolor'] == $getProductsizeDetails['productcolor']) { ?>active<?php } ?>" style="background-image: url('<?php echo $ss1; ?>')">
+                                                            <input data-url="<?php echo BASE_URL; ?>/<?php echo $productSizePermalink ?>" type="radio" name="color" id="<?php echo $sne_col; ?>" value="<?php echo $sne_col; ?>" autocomplete="off" <?php if ($sne_row_col_dis['productcolor'] == $getProductsizeDetails['productcolor']) { ?>checked<?php } ?>>
+                                                            <?php if ($sne_row_col_dis['productcolor'] == $getProductsizeDetails['productcolor']) { ?>
+                                                                <span class="fa fa-check"></span>
+                                                            <?php } ?>
+                                                        </label>
+                                                    </span>
+                                                <?php
+                                                }
+                                                ?>
+                                            </div>
+
+                                            <div class="size-boxes" style="justify-content: end; margin-top: 26px;">
+
+                                                <?php /* 
 												<span class="size-names samspop w25"><?php echo $getProductsizeDetails['size']; ?></span>
-												*/?>
-												<span class="size-box-input" data-toggle="buttons">
+												*/ ?>
+                                                <span class="size-box-input" data-toggle="buttons">
+                                                    <?php
+                                                    $getProductsizeDetailsList = $functions->query("SELECT * FROM " . PREFIX . "product_sizes WHERE product_id='" . $productDetails['id'] . "' GROUP BY size");
+                                                    while ($getProductsizeDetailsListRow = $functions->fetch($getProductsizeDetailsList)) {
+                                                        $productSizePermalink = $functions->getProductDetailPageURL($productDetails['id'], $getProductsizeDetailsListRow['id']);
+                                                    ?>
+                                                        <label class="btn size-btn <?php if ($getProductsizeDetailsListRow['size'] == $getProductsizeDetails['size']) {
+                                                                                        echo "active";
+                                                                                    } ?>">
+                                                            <?php if ($getProductsizeDetailsListRow['size'] == $getProductsizeDetails['size']) { ?>
+                                                                <!-- <span class="fa fa-check"></span> -->
+                                                            <?php } ?>
+                                                            <?php echo $getProductsizeDetailsListRow['size']; ?>
+                                                            <input data-url="<?php echo BASE_URL; ?>/<?php echo $productSizePermalink ?>" type="radio" name="size" id="<?php echo $getProductsizeDetailsListRow['size']; ?>" value="<?php echo $getProductsizeDetailsListRow['size']; ?>" autocomplete="off" <?php if ($getProductsizeDetailsListRow['size'] == $getProductsizeDetails['size']) { ?>checked<?php } ?>>
+                                                        </label>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </div>
+
+
+                                        <?php
+                                        }
+                                        ?>
+                                    </form>
+                                </div>
+                                <div class="" id="quanticoubt">
+                                    <?php
+                                    $inCartQty = '1';
+                                    if (isset($cartObj)) {
+                                        // $cartObj = new Cart();
+                                        $tempInCartQty = $cartObj->getProductQuantity($productDetails['id'], $functions);
+                                        if ($tempInCartQty) {
+                                            $inCartQty = $tempInCartQty;
+                                        }
+                                    }
+                                    ?>
+                                    <span>
+                                        <h2 class="comson2">Quantity</h2>
+                                    </span>
+                                    <div class="flecmanis">
+                                        <div class="quantity">
+
+                                            <ul class="list-inline">
+                                                <li><button class="btn-number" data-type="minus" data-field="productCount">-</button></li>
+                                                <li class="numm"><input type="number" id="number" name="productCount" value="<?php echo $inCartQty; ?>" min="1" max="<?php echo $getProductsizeDetails['available_qty']; ?>" readonly></li>
+
+                                                <li><button class="btn-number" data-type="plus" data-field="productCount">+</button></li>
+                                                <input type="hidden" id="available_qty" class="available_qty" value="<?php echo $getProductsizeDetails['available_qty']; ?>" name="available_qty">
+                                            </ul>
+                                        </div>
+                                        <?php
+                                        if ($getProductsizeDetails['available_qty'] > 0) {
+                                        ?>
+                                            <button name="cartBtn mt-5 py-5 btn_margin" id="cartBtn" data-color="<?php echo $getProductsizeDetails['productcolor']; ?>" data-size="<?php echo $getProductsizeDetails['size']; ?>" data-id="<?php echo $productDetails['id']; ?>"> Add to Cart</button>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <button style="margin-top:100px; margin-left:-100px;" name="OUTOFSTOC btn_margin" id="OUTOFSTOC" class="outofstockbtn btn-animation"><span style="color:red;">Sold Out</span></button>
+                                        <?php
+                                        }
+                                        ?>
+
+                                    </div>
+                                    <div class="scrlll">
+                                        <ul class="btn-groups list-inline">
+
+                                            <!--<li class="detailwish">
 													<?php
-														$getProductsizeDetailsList = $functions->query("SELECT * FROM ".PREFIX."product_sizes WHERE product_id='".$productDetails['id']."' GROUP BY size");
-														while($getProductsizeDetailsListRow = $functions->fetch($getProductsizeDetailsList)) {
-															$productSizePermalink = $functions->getProductDetailPageURL($productDetails['id'], $getProductsizeDetailsListRow['id']);
-													?>
-															<label class="btn size-btn <?php if($getProductsizeDetailsListRow['size']==$getProductsizeDetails['size']) { echo "active"; } ?>">
-																<?php if($getProductsizeDetailsListRow['size']==$getProductsizeDetails['size']) { ?>
-																	<!-- <span class="fa fa-check"></span> -->
-																<?php } ?>
-																<?php echo $getProductsizeDetailsListRow['size']; ?> 
-																<input data-url="<?php echo BASE_URL; ?>/<?php echo $productSizePermalink ?>" type="radio" name="size" id="<?php echo $getProductsizeDetailsListRow['size']; ?>"  value="<?php echo $getProductsizeDetailsListRow['size']; ?>" autocomplete="off" <?php if($getProductsizeDetailsListRow['size']==$getProductsizeDetails['size']) { ?>checked<?php } ?>>
-															</label>
-													<?php
-														}
-													?>
-												</span>
-											</div>
-
-
-											<?php 
-												}
-											?>
-										</form>
-									</div>
-									<div class="" id="quanticoubt">
-										<?php
-											$inCartQty = '1';
-											if(isset($cartObj)) {
-												// $cartObj = new Cart();
-												$tempInCartQty = $cartObj->getProductQuantity($productDetails['id'], $functions);
-												if($tempInCartQty) {
-													$inCartQty = $tempInCartQty;
-												}
-											}
-										?>
-										<span>
-											<h2 class="comson2">Quantity</h2>
-										</span>
-										<div class="flecmanis">
-											<div class="quantity">
-												
-												<ul class="list-inline">
-													<li><button class="btn-number" data-type="minus" data-field="productCount">-</button></li>
-													<li class="numm"><input type="number" id="number" name="productCount" value="<?php echo $inCartQty; ?>" min="1" max="<?php echo $getProductsizeDetails['available_qty']; ?>" readonly></li>
-
-													<li><button class="btn-number" data-type="plus" data-field="productCount">+</button></li>
-													<input type="hidden" id="available_qty" class="available_qty" value="<?php echo $getProductsizeDetails['available_qty']; ?>" name="available_qty" >
-												</ul>
-											</div>
-											<?php
-												if($getProductsizeDetails['available_qty']>0) {
-											?>
-													<button name="cartBtn mt-5 py-5 btn_margin" id="cartBtn" data-color="<?php echo $getProductsizeDetails['productcolor']; ?>" data-size="<?php echo $getProductsizeDetails['size']; ?>" data-id="<?php echo $productDetails['id']; ?>" > Add to Cart</button>
-											<?php
-												} else {
-											?>
-													<button style="margin-top:100px; margin-left:-100px;" name="OUTOFSTOC btn_margin" id="OUTOFSTOC" class="outofstockbtn btn-animation"><span style="color:red;">Sold Out</span></button>
-											<?php
-												}
-											?>
-
-										</div>
-										<div class="scrlll">
-											<ul class="btn-groups list-inline">
-												
-												<!--<li class="detailwish">
-													<?php
-														if($loggedInUserDetailsArr = $functions->sessionExists()){
-															$wishlistRS = $functions->query("select * from ".PREFIX."customers_wishlist where product_id='".$productDetails['id']."' and product_id='".$productDetails['id']."' and customer_id='".$loggedInUserDetailsArr['id']."'");
-															if($functions->num_rows($wishlistRS)>0){
-																$hearticon = 'fa-heart addedwish';
-															} else {
-																$hearticon = 'fa-heart';
-															}
-													?>
-															<button type="button" class="clsWishlist"  data-color="<?php echo $color; ?>" data-size="<?php if(isset($_POST['size'])){ echo $_POST['size']; }else{ echo $getProductsizeDetails['size']; } ?>" data-id="<?php echo $productDetails['id'];  ?>" >
+                                                    if ($loggedInUserDetailsArr = $functions->sessionExists()) {
+                                                        $wishlistRS = $functions->query("select * from " . PREFIX . "customers_wishlist where product_id='" . $productDetails['id'] . "' and product_id='" . $productDetails['id'] . "' and customer_id='" . $loggedInUserDetailsArr['id'] . "'");
+                                                        if ($functions->num_rows($wishlistRS) > 0) {
+                                                            $hearticon = 'fa-heart addedwish';
+                                                        } else {
+                                                            $hearticon = 'fa-heart';
+                                                        }
+                                                    ?>
+															<button type="button" class="clsWishlist"  data-color="<?php echo $color; ?>" data-size="<?php if (isset($_POST['size'])) {
+                                                                                                                                                            echo $_POST['size'];
+                                                                                                                                                        } else {
+                                                                                                                                                            echo $getProductsizeDetails['size'];
+                                                                                                                                                        } ?>" data-id="<?php echo $productDetails['id'];  ?>" >
 																<i class="fa <?php echo $hearticon ?>"></i> Wishlist
 															</button>
 													<?php
-														} else {
-													?>
+                                                    } else {
+                                                    ?>
 															<a  class="wishlistbtnnew" href="<?php echo BASE_URL; ?>/login.php?productredirect=<?php echo $permalink; ?>" style="width: auto !important;"><img src="<?php echo BASE_URL; ?>/images/wishlist.png" alt="" >  Wishlist</a>
 													<?php
-														}
-													?>
+                                                    }
+                                                    ?>
 												</li>-->
-												<?php 
-													if($getProductsizeDetails['available_qty']>0){
-												?>
+                                            <?php
+                                            if ($getProductsizeDetails['available_qty'] > 0) {
+                                            ?>
 
-												<li class="buynow" style="width: 100%">
-														<button id="buyNowBtn" data-id="<?php echo $productDetails['id']; ?>" style="width: 100%;height: 43px; border-radius: 4px;" data-color="<?php echo $getProductsizeDetails['productcolor']; ?>" data-size="<?php echo $getProductsizeDetails['size']; ?>"  value="<?php echo $productDetails['id']; ?>"> Buy Now</button>
-														<!--<button style="width: 100%;height: 43px;" value="<?php echo $productDetails['id']; ?>"> Buy Now</button>-->
-												</li>
-												<?php
-													}
-												?>
-												<!--<li class="mobshare">
+                                                <li class="buynow" style="width: 100%">
+                                                    <button id="buyNowBtn" data-id="<?php echo $productDetails['id']; ?>" style="width: 100%;height: 43px; border-radius: 4px;" data-color="<?php echo $getProductsizeDetails['productcolor']; ?>" data-size="<?php echo $getProductsizeDetails['size']; ?>" value="<?php echo $productDetails['id']; ?>"> Buy Now</button>
+                                                    <!--<button style="width: 100%;height: 43px;" value="<?php echo $productDetails['id']; ?>"> Buy Now</button>-->
+                                                </li>
+                                            <?php
+                                            }
+                                            ?>
+                                            <!--<li class="mobshare">
 													<a href="javascript:void(0);" class="a2a_dd">
 														<img src="<?php echo BASE_URL; ?>/images/share.png" alt="">
 													</a>
 												</li>-->
-											</ul>
-										</div>
+                                        </ul>
+                                    </div>
 
 
-										<?php if($productDetails['amazon_link']){ ?>
-											<a href="<?php echo $productDetails['amazon_link']; ?>"target="_blank" class="amazon-links">View product on amazon</a>
-										<?php } ?>
-										<div class="delivery-code">
-											<label><strong>Delivery Details:</strong></label><br><br>
-											<form class="delivery-form">
+                                    <?php if ($productDetails['amazon_link']) { ?>
+                                        <a href="<?php echo $productDetails['amazon_link']; ?>" target="_blank" class="amazon-links">View product on amazon</a>
+                                    <?php } ?>
+                                    <div class="delivery-code">
+                                        <label><strong>Delivery Details:</strong></label><br><br>
+                                        <form class="delivery-form">
 
-												<label>
+                                            <label>
 
-													<input type="number"  name="deliverycode" value="" placeholder="Pincode e.g. 400064" required="" maxlength="6">
-													<div class="deliveryMsg"></div>
-												</label>
-												<button type="button" class="checkDeliveryBtn" style="border-bottom: 1px solid #5C5C5C;">Check <i class="glyphicon glyphicon-arrow-right" style="color:#CADB2A"></i></button>
+                                                <input type="number" name="deliverycode" value="" placeholder="Pincode e.g. 400064" required="" maxlength="6">
+                                                <div class="deliveryMsg"></div>
+                                            </label>
+                                            <button type="button" class="checkDeliveryBtn" style="border-bottom: 1px solid #5C5C5C;">Check <i class="glyphicon glyphicon-arrow-right" style="color:#CADB2A"></i></button>
 
-											</form>
-										</div>
-									</div>
-								</div>
-															
-							</div>
-						</div>
-					</div>
-				</div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
 
-				<div class="container-fluid">
-					<div class="flexprodus flemainfills">
-						<div class="col-md-sms1 norequirs"></div>
-						
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-						
-					</div>
-				</div>
-				<div class="container" id="moblileonlyfor">
-					<div class="mobileflexx">
-						<?php /*<div class="product-copdes">
+            <div class="container-fluid">
+                <div class="flexprodus flemainfills">
+                    <div class="col-md-sms1 norequirs"></div>
+
+
+
+                </div>
+            </div>
+            <div class="container" id="moblileonlyfor">
+                <div class="mobileflexx">
+                    <?php /*<div class="product-copdes">
 							<span>Product code : <?php echo ucwords($productDetails['product_code']); ?></span> |
 							<span>HSN code : <?php echo ucwords($productDetails['hsn_code']); ?></span>
-						</div>*/?>
-						<h5 class="mobdesc">Description</h5>
-						<div class="paratextdescr conatiner">
-						   
-							<?php
-								if($getProductsizeDetails['features_color']) {
-									echo $getProductsizeDetails['features_color'];
-								}
-							?>
-						</div>
-						<?php if(!empty($getProductsizeDetails['features']))  { ?>
-						    
-							<ul class="feturelistsection">
-								<?php
-									$featureArr = explode(',', $getProductsizeDetails['features']);
-									foreach($featureArr as $oneData) {
-									$featureDetails = $functions->fetch($functions->query("select * from ".PREFIX."features_master where id='".$oneData."'"));
-									$file_name = str_replace('', '-', strtolower( pathinfo($featureDetails['image_name'], PATHINFO_FILENAME)));
-									$ext = pathinfo($featureDetails['image_name'], PATHINFO_EXTENSION);
-									?>
-										<li>
-											<img src="<?php echo BASE_URL.'/images/products/'.$file_name.'_crop.'.$ext; ?>">
-											<span class="match"><?php echo $featureDetails['feature']; 
-											
-											?></span>
-										</li>
-									<?php
-									}
-									?>
-							</ul>
-						<?php } ?>
-					</div>
-				</div>
+						</div>*/ ?>
+                    <h5 class="mobdesc">Description</h5>
+                    <div class="paratextdescr conatiner">
+
+                        <?php
+                        if ($getProductsizeDetails['features_color']) {
+                            echo $getProductsizeDetails['features_color'];
+                        }
+                        ?>
+                    </div>
+                    <?php if (!empty($getProductsizeDetails['features'])) { ?>
+
+                        <ul class="feturelistsection">
+                            <?php
+                            $featureArr = explode(',', $getProductsizeDetails['features']);
+                            foreach ($featureArr as $oneData) {
+                                $featureDetails = $functions->fetch($functions->query("select * from " . PREFIX . "features_master where id='" . $oneData . "'"));
+                                $file_name = str_replace('', '-', strtolower(pathinfo($featureDetails['image_name'], PATHINFO_FILENAME)));
+                                $ext = pathinfo($featureDetails['image_name'], PATHINFO_EXTENSION);
+                            ?>
+                                <li>
+                                    <img src="<?php echo BASE_URL . '/images/products/' . $file_name . '_crop.' . $ext; ?>">
+                                    <span class="match"><?php echo $featureDetails['feature'];
+
+                                                        ?></span>
+                                </li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <?php /*
 				<div class="container">
 					<div class="description-devips">
 						 <div class="tab-list-pros text-center center_wala" style="justify-content-center">
@@ -841,526 +868,1089 @@
 					</div>
 				</div>
 
-				<div class="container">
-					<div class="similar-poorsdus">
-						<h6>you may also like</h6>
-						<div class="listing-modules">
-							<div class="sellers-slider" id="slider-simmi">
-								<?php
-									$getProductIdDetails1 = $functions->query("SELECT * FROM ".PREFIX."products_related_products WHERE product_id='".$productDetails['id']."'");
-									$num=$functions->num_rows($getProductIdDetails1);
-									if($num!=0) {
-										while($rowProductIdList1 = $functions->fetch($getProductIdDetails1)) {
-											//echo $rowProductIdList1['related_product_id'];
-											$productDetails1 = $functions-> getUniqueProductById($rowProductIdList1['related_product_id']);
-											$getProductsizeDetails1 = $functions->fetch($functions->query("SELECT * FROM ".PREFIX."product_sizes WHERE product_id='".$rowProductIdList1['related_product_id']."' ORDER BY id ASC LIMIT 1"));
-											if($productDetails1['active']) {
-												$productBanner = $functions->getImageUrl('products',$getProductsizeDetails1['image1_color'],'crop','');
-								?>
-												<div class="produc-main" id="slide-simmi1">
-													<div class="img-prods">
-														<?php $product_link1 = $functions-> getProductDetailPageURL($productDetails1['id'], $getProductsizeDetails1['id']); ?>
-														<a href="<?php echo BASE_URL ?>/<?php echo $product_link1; ?>">
-															<?php
-																$file_name1 = str_replace('', '-', strtolower( pathinfo($productDetails1['main_image'], PATHINFO_FILENAME)));
-																$ext1 = pathinfo($productDetails1['main_image'], PATHINFO_EXTENSION);
-															?>
-															<img src="<?php echo $productBanner ?>"  width="250">
-															<div class="prohover">
-																<img src="<?php echo BASE_URL?>/images/logo.png">
-																<h6>Buy Now</h6>
-															</div> 
-														</a>
-													</div>
-													<div class="prods-desc">
-														<h2>
-															<?php
-																echo $productDetails1['product_name'];
-																$productColorArray1 = explode(",", $getProductsizeDetails1['productcolor']);
-															?> 
-														</h2>
-														<div class="product-cat-details">
-															<h2><?php echo $productDetails['product_code'] ?> | Capacity: <?php echo $getProductsizeDetails['size']; ?></h2>
-														</div>
-														<div class="prods-price">
-															<?php if($getProductsizeDetails1['customer_discount_price']){  ?>
-																<span class="text-drop">
-																	<i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails1['customer_price'] ?>
-																</span>
-																<span class="text-price-og">
-																	<i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails1['customer_discount_price'] ?>
-																</span>
-															<?php } else { ?>
-																<span class="text-price-og">
-																	<i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails1['customer_price'] ?>
-																</span>
-															<?php } ?>
-														</div>
-														<div class="pric-cart-add">
-															<!-- <span>
-																<a href="<?php// echo BASE_URL ?>/<?php //echo $product_link1; ?>">
+*/
+            ?>
+
+            <?php /* here new code */ ?>
+            <!-- custom-tab Starts -->
+            <div class="custom-tab">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="tab">
+                                <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">Description</button>
+                                <button class="tablinks" onclick="openCity(event, 'Paris')">Specifications</button>
+                                <button class="tablinks" onclick="openCity(event, 'Tokyo')">Reviews</button>
+                            </div>
+                            <!-- description Starts -->
+                            <div id="London" class="tabcontent">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="text-center descbox">
+                                            <img src="<?php echo BASE_URL; ?>/dms/images/hot-warm.jpg" class="img-fluid align-item-center" />
+                                            <p>It’s Super P.U. Insulation and stainless steel inner containers help to keep the food fresh and hot.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <div class="img-slidsec">
+                                            <div class="owl-carousel owl-theme">
+                                                <div class="item">
+                                                    <img src="<?php echo BASE_URL; ?>/dms/images/slide-img1.jpg" class="img-fluid align-item-center" />
+                                                </div>
+                                                <div class="item">
+                                                    <img src="<?php echo BASE_URL; ?>/dms/images/slide-img1.jpg" class="img-fluid align-item-center" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <div class="img-box">
+                                            <img src="<?php echo BASE_URL; ?>/dms/images/slide-img1.jpg" class="img-fluid align-item-center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-center descbox">
+                                            <p>This non-reactive stainless steel Diamond Casserole has endless advantages!
+                                                Get these sets of 2 casserole crafted from the best material.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- description Ends -->
+                            <!-- speciafication-tab Starts -->
+                            <div id="Paris" class="tabcontent">
+                                <div class="row">
+                                    <div class="col-md-9 center-block">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <img src="https://1.bp.blogspot.com/-9Uq67Y_i2ho/YR9_pbKFSjI/AAAAAAAAL5A/8TEWyaOoVcsvpIyxuO7_AhPy4khTSZoSACLcBGAsYHQ/s0/02.JPG" class="img-fluid">
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Dimension (LxWxH):</b></h4>
+                                                        <p>27 *25*12 cm</p>
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Quantity:</b></h4>
+                                                        <p>1500 ml</p>
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Material:</b></h4>
+                                                        <p>Polypropeiene</p>
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Weight:</b></h4>
+                                                        <p>730 gms</p>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <img src="https://1.bp.blogspot.com/-9Uq67Y_i2ho/YR9_pbKFSjI/AAAAAAAAL5A/8TEWyaOoVcsvpIyxuO7_AhPy4khTSZoSACLcBGAsYHQ/s0/02.JPG" class="img-fluid">
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Dimension (LxWxH):</b></h4>
+                                                        <p>27 *18*12 cm</p>
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Quantity:</b></h4>
+                                                        <p>1140 ml</p>
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Material:</b></h4>
+                                                        <p>Polypropeiene</p>
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <h4><b>Weight:</b></h4>
+                                                        <p>540 gms</p>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- speciafication-tab Ends -->
+                            <!-- reviews-sec Starts -->
+                            <div id="Tokyo" class="tabcontent">
+                                <div class="reviews-sec">
+                                    <div class="review-result" style="">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <ul class="left-doso match" style="">
+                                                    <li>
+                                                        <div class="ratingDiv" id="ratingDiv1">
+                                                            <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                            <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                            <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                            <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                            <span class="fa fa-star" style="color:#cacaca"></span>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="total-reviews">
+                                                            Based on
+                                                        </div>
+                                                        <div class="total-count">
+                                                            25 Reviews
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="reviews_left match" style="">
+                                                    <div class="average-line">
+                                                        <div class="pull-left" style="width:35%; line-height:1;">
+                                                            <div style="height:9px; margin:5px 0;"> <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-left" style="width:50%;">
+                                                            <div class="progress" style="height:9px; margin:8px 0;">
+                                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="5" style="width: 1000%">
+                                                                    <span class="sr-only">80% Complete (danger)</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-right" style="margin-left:10px; width:15%;text-align:left;">(10)</div>
+                                                    </div>
+                                                    <div class="average-line">
+                                                        <div class="pull-left" style="width:35%; line-height:1;">
+                                                            <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-left" style="width:50%;">
+                                                            <div class="progress" style="height:9px; margin:8px 0;">
+                                                                <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="5" style="width: 80%">
+                                                                    <span class="sr-only">80% Complete (danger)</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(15)</div>
+                                                    </div>
+                                                    <div class="average-line">
+                                                        <div class="pull-left" style="width:35%; line-height:1;">
+                                                            <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-left" style="width:50%;">
+                                                            <div class="progress" style="height:9px; margin:8px 0;">
+                                                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="5" style="width: 60%">
+                                                                    <span class="sr-only">80% Complete (danger)</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(0)</div>
+                                                    </div>
+                                                    <div class="average-line">
+                                                        <div class="pull-left" style="width:35%; line-height:1;">
+                                                            <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-left" style="width:50%;">
+                                                            <div class="progress" style="height:9px; margin:8px 0;">
+                                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="5" style="width: 40%">
+                                                                    <span class="sr-only">80% Complete (danger)</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(0)</div>
+                                                    </div>
+                                                    <div class="average-line">
+                                                        <div class="pull-left" style="width:35%; line-height:1;">
+                                                            <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                                <span class="fa fa-star" style="color:#cacaca"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-left" style="width:50%;">
+                                                            <div class="progress" style="height:9px; margin:8px 0;">
+                                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5" style="width: 20%">
+                                                                    <span class="sr-only">80% Complete (danger)</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(0)</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="reviews-estimate">
+                                        <div class="reviews-estimatelft">
+                                            <h4><b>Reviews</b> (25)</h4>
+                                        </div>
+                                        <div class="reviews-estimaterht">
+                                            <!-- <div class="sort-by">Sort By</div>
+                                            <div class="dropdown">
+                                                <button onclick="myFunction()" class="dropbtn">Newest <img src="<?php echo BASE_URL; ?>/dms/images/drop-arrow.png" class="img-fluid" /></button>
+                                                <div id="myDropdown" class="dropdown-content">
+                                                    <a href="#home">Newest</a>
+                                                    <a href="#about">With Picture</a>
+                                                    <a href="#contact">Highest Rating</a>
+                                                    <a href="#home">Lowest Rating</a>
+                                                    <a href="#about">Most Votes</a>
+                                                    <a href="#contact">Least Votes</a>
+                                                </div>
+                                            </div> -->
+                                            <div style="clear: both;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-review">
+                                        <div class="customer-detail">
+                                            <div class="customer-pic">
+                                                <img src="<?php echo BASE_URL; ?>/dms/images/userimg.png" class="img-fluid" />
+                                            </div>
+                                            <div class="customer-desc">
+                                                <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                                <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            </div>
+                                        </div>
+                                        <h4><b>Excellent Product</b></h4>
+                                        <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                                        <div class="text-right">
+                                            <div class="review-useful">
+                                                Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-review">
+                                        <div class="customer-detail">
+                                            <div class="customer-pic">
+                                                <img src="<?php echo BASE_URL; ?>/dms/images/userimg.png" class="img-fluid" />
+                                            </div>
+                                            <div class="customer-desc">
+                                                <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                                <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            </div>
+                                        </div>
+                                        <h4><b>Excellent Product</b></h4>
+                                        <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                                        <div class="text-right">
+                                            <div class="review-useful">
+                                                Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-review">
+                                        <div class="customer-detail">
+                                            <div class="customer-pic">
+                                                <img src="<?php echo BASE_URL; ?>/dms/images/userimg.png" class="img-fluid" />
+                                            </div>
+                                            <div class="customer-desc">
+                                                <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                                <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            </div>
+                                        </div>
+                                        <h4><b>Excellent Product</b></h4>
+                                        <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                                        <div class="text-right">
+                                            <div class="review-useful">
+                                                Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-review">
+                                        <div class="customer-detail">
+                                            <div class="customer-pic">
+                                                <img src="<?php echo BASE_URL; ?>/dms/images/userimg.png" class="img-fluid" />
+                                            </div>
+                                            <div class="customer-desc">
+                                                <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                                <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            </div>
+                                        </div>
+                                        <h4><b>Excellent Product</b></h4>
+                                        <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                                        <div class="text-right">
+                                            <div class="review-useful">
+                                                Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-review">
+                                        <div class="customer-detail">
+                                            <div class="customer-pic">
+                                                <img src="<?php echo BASE_URL; ?>/dms/images/userimg.png" class="img-fluid" />
+                                            </div>
+                                            <div class="customer-desc">
+                                                <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                                <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                                            </div>
+                                        </div>
+                                        <h4><b>Excellent Product</b></h4>
+                                        <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                                        <div class="text-right">
+                                            <div class="review-useful">
+                                                Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- pagination Starts -->
+                                <div class="pagination text-center">
+                                    <a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                                    <a href="#">1</a>
+                                    <a class="active" href="#">2</a>
+                                    <a href="#">3</a>
+                                    <a href="#">4</a>
+                                    <a href="#">5</a>
+                                    <a href="#">6</a>
+                                    <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                                </div>
+                                <!-- pagination Ends -->
+                            </div>
+                            <!-- reviews-sec Ends -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- custom-tab Ends -->
+            <?php /* new code end */ ?>
+             <!-- youmay-likesec Starts -->
+    <div class="youmay-likesec">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2><span>You may also like</span></h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="likegrid">
+                        <div class="like-img">
+                            <img src="<?php echo BASE_URL; ?>/dms/images/dimond-img1.png" class="img-fluid" />
+                            <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                        </div>
+                        <div class="like-desc">
+                            <h4>Swirl Casserole</h4>
+                            <div class="marg10">
+                                <span class="active-price">₹898
+                                </span>
+                                <span class="deduct-price"> ₹999
+                                </span><span class="discount-price">(10% Discount) </span>
+                            </div>
+                            <div>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: red"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: blue"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: green"></i>
+                                </a>
+                                <span class="available-color">+4 color</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="likegrid">
+                        <div class="like-img">
+                            <img src="<?php echo BASE_URL; ?>/dms/images/dimond-img2.png" class="img-fluid" />
+                            <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                        </div>
+                        <div class="like-desc">
+                            <h4>Diamond Casserole <span class="newitem">(New)</span></h4>
+                            <div class="marg10">
+                                <span class="active-price">₹898
+                                </span>
+                                <span class="deduct-price"> ₹999
+                                </span><span class="discount-price">(10% Discount) </span>
+                            </div>
+                            <div>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: red"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: blue"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: green"></i>
+                                </a>
+                                <span class="available-color">+4 color</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="likegrid">
+                        <div class="like-img">
+                            <img src="<?php echo BASE_URL; ?>/dms/images/dimond-img3.png" class="img-fluid" />
+                            <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                        </div>
+                        <div class="like-desc">
+                            <h4>Hippo Lunch Box</h4>
+                            <div class="marg10">
+                                <span class="active-price">₹450
+                                </span>
+                                <span class="deduct-price"> ₹699
+                                </span><span class="discount-price">(20% Discount) </span>
+                            </div>
+                            <div>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: red"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: blue"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: green"></i>
+                                </a>
+                                <span class="available-color">+4 color</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="likegrid">
+                        <div class="like-img">
+                            <img src="<?php echo BASE_URL; ?>/dms/images/dimond-img1.png" class="img-fluid" />
+                            <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                        </div>
+                        <div class="like-desc">
+                            <h4>Swirl Casserole</h4>
+                            <div class="marg10">
+                                <span class="active-price">₹898
+                                </span>
+                                <span class="deduct-price"> ₹999
+                                </span><span class="discount-price">(10% Discount) </span>
+                            </div>
+                            <div>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: red"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: blue"></i>
+                                </a>
+                                <a href="" tabindex="0">
+                                    <i class="fa fa-circle" style="color: green"></i>
+                                </a>
+                                <span class="available-color">+4 color</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- youmay-likesec Ends -->
+            <?php /*
+            <div class="container">
+                <div class="similar-poorsdus">
+                    <h6>you may also like</h6>
+                    <div class="listing-modules">
+                        <div class="sellers-slider" id="slider-simmi">
+                            <?php
+                            $getProductIdDetails1 = $functions->query("SELECT * FROM " . PREFIX . "products_related_products WHERE product_id='" . $productDetails['id'] . "'");
+                            $num = $functions->num_rows($getProductIdDetails1);
+                            if ($num != 0) {
+                                while ($rowProductIdList1 = $functions->fetch($getProductIdDetails1)) {
+                                    //echo $rowProductIdList1['related_product_id'];
+                                    $productDetails1 = $functions->getUniqueProductById($rowProductIdList1['related_product_id']);
+                                    $getProductsizeDetails1 = $functions->fetch($functions->query("SELECT * FROM " . PREFIX . "product_sizes WHERE product_id='" . $rowProductIdList1['related_product_id'] . "' ORDER BY id ASC LIMIT 1"));
+                                    if ($productDetails1['active']) {
+                                        $productBanner = $functions->getImageUrl('products', $getProductsizeDetails1['image1_color'], 'crop', '');
+                            ?>
+                                        <div class="produc-main" id="slide-simmi1">
+                                            <div class="img-prods">
+                                                <?php $product_link1 = $functions->getProductDetailPageURL($productDetails1['id'], $getProductsizeDetails1['id']); ?>
+                                                <a href="<?php echo BASE_URL ?>/<?php echo $product_link1; ?>">
+                                                    <?php
+                                                    $file_name1 = str_replace('', '-', strtolower(pathinfo($productDetails1['main_image'], PATHINFO_FILENAME)));
+                                                    $ext1 = pathinfo($productDetails1['main_image'], PATHINFO_EXTENSION);
+                                                    ?>
+                                                    <img src="<?php echo $productBanner ?>" width="250">
+                                                    <div class="prohover">
+                                                        <img src="<?php echo BASE_URL ?>/images/logo.png">
+                                                        <h6>Buy Now</h6>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="prods-desc">
+                                                <h2>
+                                                    <?php
+                                                    echo $productDetails1['product_name'];
+                                                    $productColorArray1 = explode(",", $getProductsizeDetails1['productcolor']);
+                                                    ?>
+                                                </h2>
+                                                <div class="product-cat-details">
+                                                    <h2><?php echo $productDetails['product_code'] ?> | Capacity: <?php echo $getProductsizeDetails['size']; ?></h2>
+                                                </div>
+                                                <div class="prods-price">
+                                                    <?php if ($getProductsizeDetails1['customer_discount_price']) {  ?>
+                                                        <span class="text-drop">
+                                                            <i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails1['customer_price'] ?>
+                                                        </span>
+                                                        <span class="text-price-og">
+                                                            <i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails1['customer_discount_price'] ?>
+                                                        </span>
+                                                    <?php } else { ?>
+                                                        <span class="text-price-og">
+                                                            <i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails1['customer_price'] ?>
+                                                        </span>
+                                                    <?php } ?>
+                                                </div>
+                                                <div class="pric-cart-add">
+                                                    <!-- <span>
+																<a href="<? php // echo BASE_URL 
+                                                                            ?>/<?php //echo $product_link1; 
+                                                                                ?>">
 																	<i class="fa fa-eye"></i>
 																</a>
 															</span> -->
-															<span>
-																<?php
-																	if($loggedInUserDetailsArr1 = $functions->sessionExists()){
-																		$wishlistRS1 = $functions->query("select * from ".PREFIX."customers_wishlist where product_id='".$productDetails1['id']."' and customer_id='".$loggedInUserDetailsArr1['id']."'");
-																		if($functions->num_rows($wishlistRS1)>0){
-																			$hearticon1 = 'fa-heart';
-																		} else {
-																			$hearticon1 = 'fa-heart-o';
-																		}
-																?>
-																		<a href="<?php echo BASE_URL.'/my-wishlist.php'; ?>"  class="clsWishlist" data-id="<?php echo $productDetails1['id']; ?>" data-color="<?php echo $productColorArray1[0]; ?>" data-size="<?php echo $getProductsizeDetails1['size']; ?>" onclick="addToWishList()">  
-																			<i class="fa <?php echo $hearticon1; ?>"></i>
-																		</a>
-																<?php } else { ?>
-																	<a  class="wishlistbtnnew" href="">
-																	<i class="fa fa-heart-o"></i> </a>
-																<?php } ?>
-															</span>
-															<span class="price-cart-add-top cartListingBtn" data-id="<?php echo $productDetails1['id']; ?>"> <i class="fa fa-shopping-cart"></i>
-																<input type="hidden"  name="available_qty" value="<?php echo $getProductsizeDetails1['available_qty']; ?>">
-																<input type="hidden" name="size" value="<?php echo $getProductsizeDetails1['size']; ?>">
-																<input type="hidden" name="color" value="<?php echo $productColorArray1[0]; ?>">
-															</span>
-														</div>
-													</div>
-												</div>
-								<?php
-											}
-										}
-									} else {
-										$categoryDetails = $functions->fetch($functions->query("SELECT * FROM ".PREFIX."product_subcategory_mapping WHERE product_id='".$productDetails['id']."' ORDER BY id DESC LIMIT 1"));
+                                                    <span>
+                                                        <?php
+                                                        if ($loggedInUserDetailsArr1 = $functions->sessionExists()) {
+                                                            $wishlistRS1 = $functions->query("select * from " . PREFIX . "customers_wishlist where product_id='" . $productDetails1['id'] . "' and customer_id='" . $loggedInUserDetailsArr1['id'] . "'");
+                                                            if ($functions->num_rows($wishlistRS1) > 0) {
+                                                                $hearticon1 = 'fa-heart';
+                                                            } else {
+                                                                $hearticon1 = 'fa-heart-o';
+                                                            }
+                                                        ?>
+                                                            <a href="<?php echo BASE_URL . '/my-wishlist.php'; ?>" class="clsWishlist" data-id="<?php echo $productDetails1['id']; ?>" data-color="<?php echo $productColorArray1[0]; ?>" data-size="<?php echo $getProductsizeDetails1['size']; ?>" onclick="addToWishList()">
+                                                                <i class="fa <?php echo $hearticon1; ?>"></i>
+                                                            </a>
+                                                        <?php } else { ?>
+                                                            <a class="wishlistbtnnew" href="">
+                                                                <i class="fa fa-heart-o"></i> </a>
+                                                        <?php } ?>
+                                                    </span>
+                                                    <span class="price-cart-add-top cartListingBtn" data-id="<?php echo $productDetails1['id']; ?>"> <i class="fa fa-shopping-cart"></i>
+                                                        <input type="hidden" name="available_qty" value="<?php echo $getProductsizeDetails1['available_qty']; ?>">
+                                                        <input type="hidden" name="size" value="<?php echo $getProductsizeDetails1['size']; ?>">
+                                                        <input type="hidden" name="color" value="<?php echo $productColorArray1[0]; ?>">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                }
+                            } else {
+                                $categoryDetails = $functions->fetch($functions->query("SELECT * FROM " . PREFIX . "product_subcategory_mapping WHERE product_id='" . $productDetails['id'] . "' ORDER BY id DESC LIMIT 1"));
 
-										$getProductIdDetails = $functions->query("SELECT * FROM ".PREFIX."product_subcategory_mapping WHERE category_id='".$categoryDetails['category_id']."' AND subscategory_id='".$categoryDetails['subscategory_id']."'");
-										while($rowProductIdList = $functions->fetch($getProductIdDetails)) {
-											$productDetails = $functions-> getUniqueProductById($rowProductIdList['product_id']);
-											$getProductsizeDetails = $functions->fetch($functions->query("SELECT * FROM ".PREFIX."product_sizes WHERE product_id='".$rowProductIdList['product_id']."' ORDER BY id ASC LIMIT 1"));
-											$productBanner = $functions->getImageUrl('products',$getProductsizeDetails['image1_color'],'crop','');
+                                $getProductIdDetails = $functions->query("SELECT * FROM " . PREFIX . "product_subcategory_mapping WHERE category_id='" . $categoryDetails['category_id'] . "' AND subscategory_id='" . $categoryDetails['subscategory_id'] . "'");
+                                while ($rowProductIdList = $functions->fetch($getProductIdDetails)) {
+                                    $productDetails = $functions->getUniqueProductById($rowProductIdList['product_id']);
+                                    $getProductsizeDetails = $functions->fetch($functions->query("SELECT * FROM " . PREFIX . "product_sizes WHERE product_id='" . $rowProductIdList['product_id'] . "' ORDER BY id ASC LIMIT 1"));
+                                    $productBanner = $functions->getImageUrl('products', $getProductsizeDetails['image1_color'], 'crop', '');
 
-											if($productDetails['active']) {
-								?>
-												<div class="produc-main match">
-									<div class="img-prods">  
-										<div class="pric-cart-add heart_bw " style="top:10px ; z-index: 99;align-items:baseline">                          
-											<!-- <span>                          
+                                    if ($productDetails['active']) {
+                                    ?>
+                                        <div class="produc-main match">
+                                            <div class="img-prods">
+                                                <div class="pric-cart-add heart_bw " style="top:10px ; z-index: 99;align-items:baseline">
+                                                    <!-- <span>                          
 												<a href="<?php echo $product_link; ?>">                          
 												<i class="fa fa-eye"></i>                          
 												</a>                           
-											</span> -->                                           
-											<span class="homewish">                              
-											<?php											
-											if($loggedInUserDetailsArr = $functions->sessionExists()){                                    
-											$wishlistRS = $functions->query("select * from ".PREFIX."customers_wishlist where product_id='".$productDetails['id']."' and customer_id='".$loggedInUserDetailsArr['id']."'");
-											if($functions->num_rows($wishlistRS)>0){													
-											$hearticon = 'fa-heart-o';												
-											} else {													
-											$hearticon = 'fa-heart-o';
-											}										
-											?>                                    
-											<a href="javascript: void(0)"  class="clsWishlist" data-id="<?php echo $productDetails['id']; ?>" data-color="<?php echo $productColorArray[0]; ?>" data-size="<?php echo $getProductsizeDetails['size']; ?>" onclick="addToWishList()">                                      
-											<i class="fa <?php echo $hearticon; ?>"></i> 
-											</a>										
-											<?php } else { ?>
-											<a  class="wishlistbtnnew" href="<?php echo BASE_URL."/login.php";  ?>">
-											<i class="fa fa-heart"></i> </a>
-											<?php } ?>
-											</span>                    
-										</div>
-										<?php $product_link = $functions-> getProductDetailPageURL($productDetails['id'], $getProductsizeDetails['id']); ?>                       
-										<a href="<?php echo $product_link; ?>">                       
-										<?php
-										$file_name = str_replace('', '-', strtolower( pathinfo($getProductsizeDetails['image1_color'], PATHINFO_FILENAME)));								   
-										$ext = pathinfo($getProductsizeDetails['image1_color'], PATHINFO_EXTENSION);                       
-										?>                       
-										<img src="<?php echo BASE_URL.'/images/products/'.$file_name.'_crop.jpg'; ?>"  width="250">
+											</span> -->
+                                                    <span class="homewish">
+                                                        <?php
+                                                        if ($loggedInUserDetailsArr = $functions->sessionExists()) {
+                                                            $wishlistRS = $functions->query("select * from " . PREFIX . "customers_wishlist where product_id='" . $productDetails['id'] . "' and customer_id='" . $loggedInUserDetailsArr['id'] . "'");
+                                                            if ($functions->num_rows($wishlistRS) > 0) {
+                                                                $hearticon = 'fa-heart-o';
+                                                            } else {
+                                                                $hearticon = 'fa-heart-o';
+                                                            }
+                                                        ?>
+                                                            <a href="javascript: void(0)" class="clsWishlist" data-id="<?php echo $productDetails['id']; ?>" data-color="<?php echo $productColorArray[0]; ?>" data-size="<?php echo $getProductsizeDetails['size']; ?>" onclick="addToWishList()">
+                                                                <i class="fa <?php echo $hearticon; ?>"></i>
+                                                            </a>
+                                                        <?php } else { ?>
+                                                            <a class="wishlistbtnnew" href="<?php echo BASE_URL . "/login.php";  ?>">
+                                                                <i class="fa fa-heart"></i> </a>
+                                                        <?php } ?>
+                                                    </span>
+                                                </div>
+                                                <?php $product_link = $functions->getProductDetailPageURL($productDetails['id'], $getProductsizeDetails['id']); ?>
+                                                <a href="<?php echo $product_link; ?>">
+                                                    <?php
+                                                    $file_name = str_replace('', '-', strtolower(pathinfo($getProductsizeDetails['image1_color'], PATHINFO_FILENAME)));
+                                                    $ext = pathinfo($getProductsizeDetails['image1_color'], PATHINFO_EXTENSION);
+                                                    ?>
+                                                    <img src="<?php echo BASE_URL . '/images/products/' . $file_name . '_crop.jpg'; ?>" width="250">
 
-											<div class="prohover">
-											</div>                
-										</a> 
-										
-									</div>	
-									<div class="prods-desc">                       
-										<h2>                        
-										<?php echo $productDetails['product_name'];                         
-										// if($getProductsizeDetails['size']){                          
-										// echo ' ('.$getProductsizeDetails['size'].')';                        
-										// }                        
-										$productColorArray = explode(",", $getProductsizeDetails['productcolor']);                        
-										?>                        
-										</h2>      
-										<div class="product-cat-details">
-											<h2>Casserole 1500 | Capacity: 1.5L</h2>
-										</div>                 
-										<div class="prods-price">                        
-											<?php if($getProductsizeDetails['customer_discount_price']){  ?>                          
-											                         
-											<span class="text-price-og">                          
-											<i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_discount_price'] ?>                          
-											</span>  
-											<span class="text-drop">                          
-											<i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_price'] ?>                          
-											</span> 
-											<span style="font-size: 12px;color: red;"><font>(10% Discount)</font></span>
-											<?php }else{ ?>                           
-											<span class="text-price-og">                             
-											<i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_price'] ?>                           
-											</span>                           
-											<?php } ?>                       
-										</div>                                      
-										<div class="pric-cart-add" style="text-align: left; justify-content: flex-start; top:80px;left: 0px">                          
-											 <span>                          
-												<a href="">                          
-												<i class="fa fa-circle" style="color: red"></i>                          
-												</a> 
-												 <a href="">                          
-												<i class="fa fa-circle" style="color: blue"></i>                          
-												</a> 
-												 <a href="">                          
-												<i class="fa fa-circle" style="color: green"></i>                          
-												</a> 
-											</span>                                            
-											                
-										</div>                    
-									</div>                 
-								</div>   
-								<?php
-											}
-										}
-									}
-								?>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-		</main>
-		<?
-		 if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
-         $url = "https://";   
-    else  
-         $url = "http://";   
+                                                    <div class="prohover">
+                                                    </div>
+                                                </a>
+
+                                            </div>
+                                            <div class="prods-desc">
+                                                <h2>
+                                                    <?php echo $productDetails['product_name'];
+                                                    // if($getProductsizeDetails['size']){                          
+                                                    // echo ' ('.$getProductsizeDetails['size'].')';                        
+                                                    // }                        
+                                                    $productColorArray = explode(",", $getProductsizeDetails['productcolor']);
+                                                    ?>
+                                                </h2>
+                                                <div class="product-cat-details">
+                                                    <h2>Casserole 1500 | Capacity: 1.5L</h2>
+                                                </div>
+                                                <div class="prods-price">
+                                                    <?php if ($getProductsizeDetails['customer_discount_price']) {  ?>
+
+                                                        <span class="text-price-og">
+                                                            <i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_discount_price'] ?>
+                                                        </span>
+                                                        <span class="text-drop">
+                                                            <i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_price'] ?>
+                                                        </span>
+                                                        <span style="font-size: 12px;color: red;">
+                                                            <font>(10% Discount)</font>
+                                                        </span>
+                                                    <?php } else { ?>
+                                                        <span class="text-price-og">
+                                                            <i class="fa fa-rupee"></i> <?php echo $getProductsizeDetails['customer_price'] ?>
+                                                        </span>
+                                                    <?php } ?>
+                                                </div>
+                                                <div class="pric-cart-add" style="text-align: left; justify-content: flex-start; top:80px;left: 0px">
+                                                    <span>
+                                                        <a href="">
+                                                            <i class="fa fa-circle" style="color: red"></i>
+                                                        </a>
+                                                        <a href="">
+                                                            <i class="fa fa-circle" style="color: blue"></i>
+                                                        </a>
+                                                        <a href="">
+                                                            <i class="fa fa-circle" style="color: green"></i>
+                                                        </a>
+                                                    </span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                            <?php
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            */?>
+        </section>
+    </main>
+    <?
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+        $url = "https://";
+    else
+        $url = "http://";
     // Append the host(domain name, ip) to the URL.   
-    $url.= $_SERVER['HTTP_HOST'];   
-    
+    $url .= $_SERVER['HTTP_HOST'];
+
     // Append the requested resource location to the URL   
-    $url.= $_SERVER['REQUEST_URI'];   
-		?>
+    $url .= $_SERVER['REQUEST_URI'];
+    ?>
 
-		<!--Main End Code Here-->
-		<!--footer start menu head-->
+    <!--Main End Code Here-->
+    <!--footer start menu head-->
 
-		<?php include("include/footer.php");?> 
+    <?php include("include/footer.php"); ?>
 
-		<!--footer end menu head-->
+    <!--footer end menu head-->
 
-		<?php include("include/footer-link.php");?>
-		<script async src="https://static.addtoany.com/menu/page.js"></script>
-		<script>
-			var a2a_config = a2a_config || {};
-			a2a_config.onclick = 1;
-		</script>
-		<script>
-	
+    <?php include("include/footer-link.php"); ?>
+    <script async src="https://static.addtoany.com/menu/page.js"></script>
+    <script>
+        var a2a_config = a2a_config || {};
+        a2a_config.onclick = 1;
+    </script>
+    <script>
+        $('.feturelistsection').slick({
+            slidesToShow: 5,
+            slidesToScroll: 1,
+            infinite: false,
+            arrows: true,
+            // dots: true	,
+            responsive: [{
+                breakpoint: 600,
+                settings: "unslick"
+            }, ]
+        });
 
-			$('.feturelistsection').slick({
-			  slidesToShow: 5,
-			  slidesToScroll: 1,
-			  infinite: false,
-			  arrows: true,
-			  // dots: true	,
-		       responsive: [
-		       {
-		        breakpoint: 600,
-		          settings: "unslick"
-		       },
-		       ]		 
-			});			
+        $('#slider-simmi').not('.slick-initialized').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            infinite: false,
+            arrows: true,
+            // dots: true	,
+            responsive: [{
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    vertical: false,
+                    verticalSwiping: false,
+                    arrows: true,
+                    dots: false
+                },
+            }, ]
+        });
+        $("[data-fancybox]").fancybox({
+            toolbar: false,
+            smallBtn: true,
+            iframe: {
+                preload: true,
+                css: {
+                    width: '600px',
+                    height: '350px'
+                }
+            }
+        });
 
-			$('#slider-simmi').not('.slick-initialized').slick({
-			  slidesToShow: 4,
-			  slidesToScroll: 1,
-			  infinite: false,
-			  arrows: true,
-			  // dots: true	,
-		       responsive: [
-		       {
-		        breakpoint: 600,
-		        settings: {
-		          slidesToShow: 2,
-		          slidesToScroll: 1,
-		          vertical: false,
-		          verticalSwiping: false,
-		          arrows:true,
-		          dots:false
-		        },
-		       },
-		       ]		 
-			});			
-			$("[data-fancybox]").fancybox({
-				toolbar  : false,
-				smallBtn : true,
-				iframe : {
-					preload : true,
-					css : {
-						width : '600px',
-						height : '350px'
-					}
-				}
-			});
+        $('.bntlpop').on('click', function(e) {
+            $(".bntlpop").toggleClass("active");
 
-			$('.bntlpop').on('click', function (e) {
-				$(".bntlpop").toggleClass("active");
+            // $(".tab-list-pros").toggleClass("fixed");
 
-				// $(".tab-list-pros").toggleClass("fixed");
+            e.preventDefault()
 
-				e.preventDefault()
+            $('html, body').animate({
+                scrollTop: $($(this).attr('href')).offset().top - 100,
+            }, 500, 'linear')
+        });
 
-				$('html, body').animate({
-					scrollTop: $($(this).attr('href')).offset().top - 100,
-				},500,'linear')
-			});
+        // $("input[name='color']")[0].click();
+        // $("input[name='size']")[0].click();
 
-			// $("input[name='color']")[0].click();
-			// $("input[name='size']")[0].click();
+        $(".colo-btn").on('change', function() {
+            var radioValue = $("input[name='color']:checked").val();
+            var redirect_url = $("input[name='color']:checked").data('url');
+            window.location.href = redirect_url;
 
-			$(".colo-btn").on('change', function() {
-				var radioValue = $("input[name='color']:checked"). val();
-				var redirect_url = $("input[name='color']:checked").data('url');
-				window.location.href = redirect_url;
+            $(".color-names").text(radioValue);
+            // $('#formcolorsizebox').submit();
+        });
 
-				$(".color-names").text(radioValue);
-				// $('#formcolorsizebox').submit();
-			});
+        $(".size-btn").on('change', function() {
+            var radioValue = $("input[name='size']:checked").val();
+            var redirect_url = $("input[name='size']:checked").data('url');
+            window.location.href = redirect_url;
 
-			$(".size-btn").on('change', function() {
-				var radioValue = $("input[name='size']:checked"). val();
-				var redirect_url = $("input[name='size']:checked").data('url');
-				window.location.href = redirect_url;
+            $(".size-names").text(radioValue);
+            // $('#formcolorsizebox').submit();
+        });
 
-				$(".size-names").text(radioValue);
-				// $('#formcolorsizebox').submit();
-			});
+        $(function($) {
+            // define the gallery object
+            var $gallery = $('#gallery_01');
 
-			$(function($) {
-				// define the gallery object
-				var $gallery = $('#gallery_01');
+            // Build array of objects to open in Fancybox.
 
-				// Build array of objects to open in Fancybox.
+            var $imgs = [];
+            $('a', $gallery).each(function() {
+                $imgs.push({
+                    'src': $(this).data('zoom-image')
+                });
+            });
 
-				var $imgs = [];
-				$('a', $gallery).each(function() {
-					$imgs.push({'src': $(this).data('zoom-image')});
-				});
+            if ($(window).width() > 810) {
+                var elevateZoomOptions = {
+                    gallery: 'gallery_01',
+                    cursor: 'pointer',
+                    zoomType: 'window',
+                    zoomLens: false,
+                    easing: true,
+                    scrollZoom: true,
+                    galleryActiveClass: "active",
+                    imageCrossfade: true,
+                    loadingIcon: "<?php echo BASE_URL; ?>/images/ajax-loader.gif"
+                };
 
-				if ($(window).width() > 810) {
-					var elevateZoomOptions = {
-						gallery:'gallery_01',
-						cursor: 'pointer',
-						zoomType:'window',
-						zoomLens :false,
-						easing : true,
-						scrollZoom : true,
-						galleryActiveClass: "active",
-						imageCrossfade: true,
-						loadingIcon: "<?php echo BASE_URL; ?>/images/ajax-loader.gif"
-					};
+                $("#zoom_03").elevateZoom(elevateZoomOptions);
 
-					$("#zoom_03").elevateZoom(elevateZoomOptions);
+                // Bind Fancybox to clicking the zoom image.
 
-					// Bind Fancybox to clicking the zoom image.
+                // Open it to the currently active index.
 
-					// Open it to the currently active index.
+                $("#zoom_03").on("click", function(e) {
+                    e.preventDefault();
+                    var active_index = $('.active', $gallery).index();
+                    $.fancybox.open($imgs, false, active_index);
+                });
+            }
 
-					$("#zoom_03").on("click", function(e) {
-						e.preventDefault();
-						var active_index = $('.active', $gallery).index();
-						$.fancybox.open($imgs, false, active_index);
-					});
-				}
+            if ($(window).width() < 800) {
+                var elevateZoomOptions = {
+                    gallery: 'gallery_01',
+                    cursor: 'pointer',
+                    zoomType: 'none',
+                    easing: true,
+                    scrollZoom: true,
+                    galleryActiveClass: "active",
+                    imageCrossfade: true,
+                    loadingIcon: "<?php echo BASE_URL; ?>/images/ajax-loader.gif"
+                };
 
-				if ($(window).width() < 800) {
-					var elevateZoomOptions = {
-						gallery:'gallery_01',
-						cursor: 'pointer',
-						zoomType:'none',
-						easing : true,
-						scrollZoom : true,
-						galleryActiveClass: "active",
-						imageCrossfade: true,
-						loadingIcon: "<?php echo BASE_URL; ?>/images/ajax-loader.gif"
-					};
+                $("#zoom_03").elevateZoom(elevateZoomOptions);
 
-					$("#zoom_03").elevateZoom(elevateZoomOptions);
+                // Bind Fancybox to clicking the zoom image.
 
-					// Bind Fancybox to clicking the zoom image.
+                // Open it to the currently active index.
 
-					// Open it to the currently active index.
+                $("#zoom_03").on("click", function(e) {
+                    if (e.cancelable) e.preventDefault();
+                    var active_index = $('.active', $gallery).index();
+                    $.fancybox.open($imgs, false, active_index);
+                });
 
-					$("#zoom_03").on("click", function(e) {
-						if (e.cancelable) e.preventDefault();
-						var active_index = $('.active', $gallery).index();
-						$.fancybox.open($imgs, false, active_index);
-					});
+                $('#zoom_03').removeData('elevateZoom');
+                $('.zoomWrapper img.zoomed').unwrap();
+                $('.zoomContainer').remove();
+                $("#zoom_03").unbind("touchmove");
 
-					$('#zoom_03').removeData('elevateZoom');
-			        $('.zoomWrapper img.zoomed').unwrap();
-			        $('.zoomContainer').remove();
-			        $("#zoom_03").unbind("touchmove");
+                /*function simulateMouseEvent (event, simulatedType) {
 
-					/*function simulateMouseEvent (event, simulatedType) {
+                	  // Ignore multi-touch events
+                	  if (event.originalEvent.touches.length > 1) {
+                	    return;
+                	  }
 
-						  // Ignore multi-touch events
-						  if (event.originalEvent.touches.length > 1) {
-						    return;
-						  }
+                	  if(event.cancelable) {
+                	    event.preventDefault();
+                	  }
+                	}*/
+            }
 
-						  if(event.cancelable) {
-						    event.preventDefault();
-						  }
-						}*/
-				}
+            $('.gallery').on('click', '.slick-slide', function(e) {
+                if ($(this).hasClass('hasVideo')) {
+                    $('.videoShow').show();
+                } else {
+                    $('.videoShow').hide();
+                }
+            });
 
-				$('.gallery').on('click', '.slick-slide', function(e){
-					if($(this).hasClass('hasVideo')){
-						$('.videoShow').show();
-					} else {
-						$('.videoShow').hide();
-					}
-				});
+            $('.demonvideo1').click(function() {
+                $(".vmdemo1").show();
+                $(".zoomContainer").hide();
+                $(".vmdemo2").hide();
+                $(".vmdemo3").hide();
+                $(".vmdemo4").hide();
+                $(".vmdemo5").hide();
+            });
 
-				$('.demonvideo1').click(function(){
-					$(".vmdemo1").show();
-					$(".zoomContainer").hide();
-					$(".vmdemo2").hide();
-					$(".vmdemo3").hide();
-					$(".vmdemo4").hide();
-					$(".vmdemo5").hide();
-				});
+            $('.demonvideo2').click(function() {
+                $(".vmdemo1").hide();
+                $(".zoomContainer").hide();
+                $(".vmdemo2").show();
+                $(".vmdemo3").hide();
+                $(".vmdemo4").hide();
+                $(".vmdemo5").hide();
+            });
 
-				$('.demonvideo2').click(function(){
-					$(".vmdemo1").hide();
-					$(".zoomContainer").hide();
-					$(".vmdemo2").show();
-					$(".vmdemo3").hide();
-					$(".vmdemo4").hide();
-					$(".vmdemo5").hide();
-				});
+            $('.demonvideo3').click(function() {
+                $(".vmdemo1").hide();
+                $(".vmdemo2").hide();
+                $(".zoomContainer").hide();
+                $(".vmdemo3").show();
+                $(".vmdemo4").hide();
+                $(".vmdemo5").hide();
+            });
 
-				$('.demonvideo3').click(function(){
-					$(".vmdemo1").hide();
-					$(".vmdemo2").hide();
-					$(".zoomContainer").hide();
-					$(".vmdemo3").show();
-					$(".vmdemo4").hide();
-					$(".vmdemo5").hide();
-				});
+            $('.demonvideo4').click(function() {
+                $(".vmdemo1").hide();
+                $(".vmdemo2").hide();
+                $(".zoomContainer").hide();
+                $(".vmdemo3").hide();
+                $(".vmdemo4").show();
+                $(".vmdemo5").hide();
+            });
 
-				$('.demonvideo4').click(function(){
-					$(".vmdemo1").hide();
-					$(".vmdemo2").hide();
-					$(".zoomContainer").hide();
-					$(".vmdemo3").hide();
-					$(".vmdemo4").show();
-					$(".vmdemo5").hide();
-				});
+            $('.demonvideo5').click(function() {
+                $(".vmdemo1").hide();
+                $(".vmdemo2").hide();
+                $(".zoomContainer").hide();
+                $(".vmdemo3").hide();
+                $(".vmdemo4").hide();
+                $(".vmdemo5").show();
+            });
 
-				$('.demonvideo5').click(function(){
-					$(".vmdemo1").hide();
-					$(".vmdemo2").hide();
-					$(".zoomContainer").hide();
-					$(".vmdemo3").hide();
-					$(".vmdemo4").hide();
-					$(".vmdemo5").show();
-				});
+            $('.elevatezoom-gallery img').click(function() {
+                $('.videoShow').hide();
+                $(".zoomContainer").show();
+            });
+        });
+    </script>
+    <script>
+        $("#gallery_01").not('.slick-initialized').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            vertical: true,
+            verticalSwiping: true,
+            dots: false,
+            arrows: true,
+            infinite: false,
+            responsive: [{
+                breakpoint: 640,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    dots: false,
+                    arrows: false,
+                    autoplay: true,
+                    autoplaySpeed: 2000,
+                    speed: 300,
+                    vertical: false,
+                    verticalSwiping: false
+                }
+            }]
 
-				$('.elevatezoom-gallery img').click(function(){
-					$('.videoShow').hide();
-					$(".zoomContainer").show();
-				});
-			});
-		</script>
-		<script>
-      $("#gallery_01").not('.slick-initialized').slick({
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      vertical: true,
-      verticalSwiping: true,
-      dots: false,
-      arrows:true,
-      infinite: false,
-      responsive: [
-      {
-      breakpoint: 640,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll:1,
-          dots:false,
-          arrows:false,
-          autoplay: true,
-          autoplaySpeed: 2000,
-          speed: 300,
-          vertical: false,
-          verticalSwiping: false
+        });
+        $(document).ready(function() {
+            $(".scroll").mCustomScrollbar({
+                theme: "inset-dark",
+                scrollButtons: {
+                    enable: true
+                }
+            });
+
+            $(".checkDeliveryBtn").click(function() {
+                $(".deliveryMsg").html();
+                var deliverycode = $('input[name="deliverycode"]').val();
+                if (deliverycode == '') {
+                    $(".deliveryMsg").html('<span style="color: red">Please enter your pincode</span>');
+                    return false;
+                }
+                $.ajax({
+                    type: "post",
+                    data: {
+                        pincode: deliverycode
+                    },
+                    url: "<?php echo BASE_URL ?>/ajaxCheckDeliveryPincode.php",
+                    success: function(response) {
+                        if (response == 'true') {
+                            $(".deliveryMsg").html('<span style="color: green">We deliver to this location</span>');
+                        } else {
+                            $(".deliveryMsg").html('<span style="color: red">We do not deliver to this location</span>');
+                        }
+                    }
+                });
+            });
+
+
+        });
+        $('#cartBtn').on('click', function() {
+            setTimeout(function() {
+                window.location = "<?php echo $url ?>";
+            }, 200);
+        });
+
+        /*  
+
+        $('.clsWishlist').on('click',function(){
+        	setTimeout(function(){         
+        		window.location="<?php echo BASE_URL; ?>/my-wishlist.php";
+        	}, 200);
+        });
+
+        $('.cartListingBtn').on('click',function(){
+        	setTimeout(function(){         
+        		window.location="<?php echo BASE_URL; ?>/cart.php";
+        	}, 200);
+        }); */
+    </script>
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
-      }
-      ]
 
-      });
-			$(document).ready(function(){
-				$(".scroll").mCustomScrollbar({
-					theme: "inset-dark",
-					scrollButtons: {enable:true}
-				});
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                margin: 10,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                        nav: true
+                    },
+                    600: {
+                        items: 1,
+                        nav: false
+                    },
+                    1000: {
+                        items: 1,
+                        nav: true,
+                        autoplay: true,
+                        loop: true
+                    }
+                }
+            })
+        });
+    </script>
+    <script>
+        /* When the user clicks on the button, 
+         toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
 
-				$(".checkDeliveryBtn").click(function() {
-					$(".deliveryMsg").html();
-					var deliverycode = $('input[name="deliverycode"]').val();
-					if(deliverycode=='') {
-						$(".deliveryMsg").html('<span style="color: red">Please enter your pincode</span>');
-						return false;
-					}
-					$.ajax({
-						type: "post",
-						data: {pincode: deliverycode},
-						url: "<?php echo BASE_URL ?>/ajaxCheckDeliveryPincode.php",
-						success: function(response) {
-							if(response=='true') {
-								$(".deliveryMsg").html('<span style="color: green">We deliver to this location</span>');
-							} else {
-								$(".deliveryMsg").html('<span style="color: red">We do not deliver to this location</span>');
-							}
-						}
-					});
-				});
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
 
-				
-			});
-			$('#cartBtn').on('click',function(){
-				setTimeout(function(){         
-					window.location="<?php echo $url?>";
-				}, 200);
-			});
-
-			/*  
-
-			$('.clsWishlist').on('click',function(){
-				setTimeout(function(){         
-					window.location="<?php echo BASE_URL; ?>/my-wishlist.php";
-				}, 200);
-			});
-
-			$('.cartListingBtn').on('click',function(){
-				setTimeout(function(){         
-					window.location="<?php echo BASE_URL; ?>/cart.php";
-				}, 200);
-			}); */
-			
-			
-		
-
-		</script>
-	</body>
 </html>

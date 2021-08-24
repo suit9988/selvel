@@ -18,7 +18,7 @@
 <script src="<?php echo BASE_URL; ?>/js/index.js" type="text/javascript"></script>
 
 <script src="<?php echo BASE_URL; ?>/js/jquery.mCustomScrollbar.min.js" type="text/javascript"></script>
-
+<script src="<?php echo BASE_URL; ?>/dms/js/owl.carousel.js" type="text/javascript"></script>
 <script type="text/javascript">
 	$(".scrollbarhai").mCustomScrollbar({
 		axis: "y"

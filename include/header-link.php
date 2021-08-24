@@ -55,6 +55,12 @@
 <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>/css/responsive.css?version=<?=time()?>">
 
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/font-awesome/css/font-awesome.min.css">
+<link href="<?php echo BASE_URL; ?>/dms/css/custom-tab.css" rel="stylesheet">
+    <!-- Owl Stylesheets -->
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/dms/css/owl.carousel.min.css">
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/dms/css/owl.theme.default.min.css">
+<!-- javascript -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/jquery.mCustomScrollbar.min.css">
 <!-- Global site tag (gtag.js) - Google Analytics -->

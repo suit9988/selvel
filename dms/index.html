@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <link href="css/custom-tab.css" rel="stylesheet">
+      <!-- Owl Stylesheets -->
+      <link rel="stylesheet" href="css/owl.carousel.min.css">
+      <link rel="stylesheet" href="css/owl.theme.default.min.css">
+      <!-- javascript -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   </head>
+   <body>
+      <!-- custom-tab Starts -->
+      <div class="custom-tab">
+         <div class="container">
+            <div class="row">
+               <div class="col-sm-12">
+                  <div class="tab">
+                     <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">Description</button>
+                     <button class="tablinks" onclick="openCity(event, 'Paris')">Specifications</button>
+                     <button class="tablinks" onclick="openCity(event, 'Tokyo')">Reviews</button>
+                  </div>
+                  <!-- description Starts -->
+                  <div id="London" class="tabcontent">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="text-center descbox">
+                              <img src="images/hot-warm.jpg" class="img-fluid align-item-center"/>
+                              <p>It’s Super P.U. Insulation and stainless steel inner containers help to keep the food fresh and hot.</p>
+                           </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                           <div class="img-slidsec">
+                              <div class="owl-carousel owl-theme">
+                                 <div class="item">
+                                    <img src="images/slide-img1.jpg" class="img-fluid align-item-center"/>
+                                 </div>
+                                 <div class="item">
+                                    <img src="images/slide-img1.jpg" class="img-fluid align-item-center"/>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-6 text-center">
+                           <div class="img-box">
+                              <img src="images/slide-img1.jpg" class="img-fluid align-item-center"/>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="text-center descbox">
+                              <p>This non-reactive stainless steel Diamond Casserole has endless advantages! 
+                                 Get these sets of 2 casserole crafted from the best material.
+                              </p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- description Ends -->
+                  <!-- speciafication-tab Starts -->
+                  <div id="Paris" class="tabcontent">
+                     <div class="row">
+                        <div class="col-md-9 center-block">
+                           <table class="table">
+                              <tbody>
+                                 <tr>
+                                    <td>
+                                       <img src="https://1.bp.blogspot.com/-9Uq67Y_i2ho/YR9_pbKFSjI/AAAAAAAAL5A/8TEWyaOoVcsvpIyxuO7_AhPy4khTSZoSACLcBGAsYHQ/s0/02.JPG" class="img-fluid">
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Dimension (LxWxH):</b></h4>
+                                       <p>27 *25*12 cm</p>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Quantity:</b></h4>
+                                       <p>1500 ml</p>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Material:</b></h4>
+                                       <p>Polypropeiene</p>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Weight:</b></h4>
+                                       <p>730 gms</p>
+                                    </td>
+                                    <td></td>
+                                 </tr>
+                                 <tr>
+                                    <td>
+                                       <img src="https://1.bp.blogspot.com/-9Uq67Y_i2ho/YR9_pbKFSjI/AAAAAAAAL5A/8TEWyaOoVcsvpIyxuO7_AhPy4khTSZoSACLcBGAsYHQ/s0/02.JPG" class="img-fluid">
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Dimension (LxWxH):</b></h4>
+                                       <p>27 *18*12 cm</p>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Quantity:</b></h4>
+                                       <p>1140 ml</p>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Material:</b></h4>
+                                       <p>Polypropeiene</p>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                       <h4><b>Weight:</b></h4>
+                                       <p>540 gms</p>
+                                    </td>
+                                    <td></td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- speciafication-tab Ends -->
+                  <!-- reviews-sec Starts -->
+                  <div id="Tokyo" class="tabcontent">
+                     <div class="reviews-sec">
+                        <div class="review-result" style="">
+                           <div class="row">
+                              <div class="col-sm-2">
+                                 <ul class="left-doso match" style="">
+                                    <li>
+                                       <div class="ratingDiv" id="ratingDiv1">
+                                          <span class="fa fa-star checked" style="color:#fab400"></span>
+                                          <span class="fa fa-star checked" style="color:#fab400"></span>
+                                          <span class="fa fa-star checked" style="color:#fab400"></span>
+                                          <span class="fa fa-star checked" style="color:#fab400"></span>
+                                          <span class="fa fa-star" style="color:#cacaca"></span>
+                                       </div>
+                                    </li>
+                                    <li>
+                                       <div class="total-reviews">
+                                          Based on
+                                       </div>
+                                       <div class="total-count">
+                                          25 Reviews
+                                       </div>
+                                    </li>
+                                 </ul>
+                              </div>
+                              <div class="col-sm-3">
+                                 <div class="reviews_left match" style="">
+                                    <div class="average-line">
+                                       <div class="pull-left" style="width:35%; line-height:1;">
+                                          <div style="height:9px; margin:5px 0;"> <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                          </div>
+                                       </div>
+                                       <div class="pull-left" style="width:50%;">
+                                          <div class="progress" style="height:9px; margin:8px 0;">
+                                             <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="5" style="width: 1000%">
+                                                <span class="sr-only">80% Complete (danger)</span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="pull-right" style="margin-left:10px; width:15%;text-align:left;">(10)</div>
+                                    </div>
+                                    <div class="average-line">
+                                       <div class="pull-left" style="width:35%; line-height:1;">
+                                          <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                          </div>
+                                       </div>
+                                       <div class="pull-left" style="width:50%;">
+                                          <div class="progress" style="height:9px; margin:8px 0;">
+                                             <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="5" style="width: 80%">
+                                                <span class="sr-only">80% Complete (danger)</span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(15)</div>
+                                    </div>
+                                    <div class="average-line">
+                                       <div class="pull-left" style="width:35%; line-height:1;">
+                                          <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                          </div>
+                                       </div>
+                                       <div class="pull-left" style="width:50%;">
+                                          <div class="progress" style="height:9px; margin:8px 0;">
+                                             <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="5" style="width: 60%">
+                                                <span class="sr-only">80% Complete (danger)</span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(0)</div>
+                                    </div>
+                                    <div class="average-line">
+                                       <div class="pull-left" style="width:35%; line-height:1;">
+                                          <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                          </div>
+                                       </div>
+                                       <div class="pull-left" style="width:50%;">
+                                          <div class="progress" style="height:9px; margin:8px 0;">
+                                             <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="5" style="width: 40%">
+                                                <span class="sr-only">80% Complete (danger)</span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(0)</div>
+                                    </div>
+                                    <div class="average-line">
+                                       <div class="pull-left" style="width:35%; line-height:1;">
+                                          <div style="height:9px; margin:5px 0;"><span class="fa fa-star checked" style="color:#fab400"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                             <span class="fa fa-star" style="color:#cacaca"></span>
+                                          </div>
+                                       </div>
+                                       <div class="pull-left" style="width:50%;">
+                                          <div class="progress" style="height:9px; margin:8px 0;">
+                                             <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5" style="width: 20%">
+                                                <span class="sr-only">80% Complete (danger)</span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="pull-right" style="margin-left:10px;width:15%;text-align:left;">(0)</div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="reviews-estimate">
+                           <div class="reviews-estimatelft">
+                              <h4><b>Reviews</b> (25)</h4>
+                           </div>
+  
+                        </div>
+                        <div class="customer-review">
+                           <div class="customer-detail">
+                              <div class="customer-pic">
+                                 <img src="images/userimg.png" class="img-fluid"/>
+                              </div>
+                              <div class="customer-desc">
+                                 <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                 <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                              </div>
+                           </div>
+                           <h4><b>Excellent Product</b></h4>
+                           <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                           <div class="text-right">
+                              <div class="review-useful">
+                                 Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="customer-review">
+                           <div class="customer-detail">
+                              <div class="customer-pic">
+                                 <img src="images/userimg.png" class="img-fluid"/>
+                              </div>
+                              <div class="customer-desc">
+                                 <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                 <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                              </div>
+                           </div>
+                           <h4><b>Excellent Product</b></h4>
+                           <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                           <div class="text-right">
+                              <div class="review-useful">
+                                 Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="customer-review">
+                           <div class="customer-detail">
+                              <div class="customer-pic">
+                                 <img src="images/userimg.png" class="img-fluid"/>
+                              </div>
+                              <div class="customer-desc">
+                                 <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                 <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                              </div>
+                           </div>
+                           <h4><b>Excellent Product</b></h4>
+                           <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                           <div class="text-right">
+                              <div class="review-useful">
+                                 Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="customer-review">
+                           <div class="customer-detail">
+                              <div class="customer-pic">
+                                 <img src="images/userimg.png" class="img-fluid"/>
+                              </div>
+                              <div class="customer-desc">
+                                 <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                 <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                              </div>
+                           </div>
+                           <h4><b>Excellent Product</b></h4>
+                           <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                           <div class="text-right">
+                              <div class="review-useful">
+                                 Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="customer-review">
+                           <div class="customer-detail">
+                              <div class="customer-pic">
+                                 <img src="images/userimg.png" class="img-fluid"/>
+                              </div>
+                              <div class="customer-desc">
+                                 <span class="custmer-name">Naseem Motiwala</span> <span class="verified-buyer">Verified Buyer</span>
+                                 <div class="star-group"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></div>
+                              </div>
+                           </div>
+                           <h4><b>Excellent Product</b></h4>
+                           <p>I'm extremely happy with my trio of knives. They are perfect for my kitchen needs.</p>
+                           <div class="text-right">
+                              <div class="review-useful">
+                                 Was this review useful?<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="like-count">1</span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="like-count">0</span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- pagination Starts -->
+                     <div class="pagination text-center">
+                        <a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                        <a href="#">1</a>
+                        <a class="active" href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">5</a>
+                        <a href="#">6</a>
+                        <a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                     </div>
+                     <!-- pagination Ends -->
+                  </div>
+                  <!-- reviews-sec Ends -->
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- custom-tab Ends -->
+      <!-- youmay-likesec Starts -->
+      <div class="youmay-likesec">
+         <div class="container">
+            <div class="row">
+               <div class="col-sm-12">
+                  <h2><span>You may also like</span></h2>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-sm-3">
+                  <div class="likegrid">
+                     <div class="like-img">
+                        <img src="images/dimond-img1.png" class="img-fluid"/>
+                        <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                     </div>
+                     <div class="like-desc">
+                        <h4>Swirl Casserole</h4>
+                        <div class="marg10">
+                           <span class="active-price">₹898
+                           </span>
+                           <span class="deduct-price"> ₹999
+                           </span><span class="discount-price">(10% Discount)  </span>
+                        </div>
+                        <div>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: red"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: blue"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: green"></i>
+                           </a>
+                           <span class="available-color">+4 color</span> 
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-3">
+                  <div class="likegrid">
+                     <div class="like-img">
+                        <img src="images/dimond-img2.png" class="img-fluid"/>
+                        <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                     </div>
+                     <div class="like-desc">
+                        <h4>Diamond Casserole <span class="newitem">(New)</span></h4>
+                        <div class="marg10">
+                           <span class="active-price">₹898
+                           </span>
+                           <span class="deduct-price"> ₹999
+                           </span><span class="discount-price">(10% Discount)  </span>
+                        </div>
+                        <div>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: red"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: blue"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: green"></i>
+                           </a>
+                           <span class="available-color">+4 color</span> 
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-3">
+                  <div class="likegrid">
+                     <div class="like-img">
+                        <img src="images/dimond-img3.png" class="img-fluid"/>
+                        <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                     </div>
+                     <div class="like-desc">
+                        <h4>Hippo Lunch Box</h4>
+                        <div class="marg10">
+                           <span class="active-price">₹450
+                           </span>
+                           <span class="deduct-price"> ₹699
+                           </span><span class="discount-price">(20% Discount)    </span>
+                        </div>
+                        <div>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: red"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: blue"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: green"></i>
+                           </a>
+                           <span class="available-color">+4 color</span> 
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-3">
+                  <div class="likegrid">
+                     <div class="like-img">
+                        <img src="images/dimond-img1.png" class="img-fluid"/>
+                        <div class="wishicn"><a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a></div>
+                     </div>
+                     <div class="like-desc">
+                        <h4>Swirl Casserole</h4>
+                        <div class="marg10">
+                           <span class="active-price">₹898
+                           </span>
+                           <span class="deduct-price"> ₹999
+                           </span><span class="discount-price">(10% Discount)      </span>
+                        </div>
+                        <div>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: red"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: blue"></i>
+                           </a>
+                           <a href="" tabindex="0">
+                           <i class="fa fa-circle" style="color: green"></i>
+                           </a>
+                           <span class="available-color">+4 color</span> 
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- youmay-likesec Ends -->
+      <script>
+         function openCity(evt, cityName) {
+         var i, tabcontent, tablinks;
+         tabcontent = document.getElementsByClassName("tabcontent");
+         for (i = 0; i < tabcontent.length; i++) {
+         tabcontent[i].style.display = "none";
+         }
+         tablinks = document.getElementsByClassName("tablinks");
+         for (i = 0; i < tablinks.length; i++) {
+         tablinks[i].className = tablinks[i].className.replace(" active", "");
+         }
+         document.getElementById(cityName).style.display = "block";
+         evt.currentTarget.className += " active";
+         }
+         
+         // Get the element with id="defaultOpen" and click on it
+         document.getElementById("defaultOpen").click();
+      </script>
+      </div>
+      </div>
+      </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="js/owl.carousel.js"></script>
+      <script>
+         $(document).ready(function(){
+         $('.owl-carousel').owlCarousel({
+         loop:true,
+         margin:10,
+         responsiveClass:true,
+         responsive:{
+         0:{
+         items:1,
+         nav:true
+         },
+         600:{
+         items:1,
+         nav:false
+         },
+         1000:{
+         items:1,
+         nav:true,
+         autoplay:true,
+         loop:true
+         }
+         }
+         })
+         });
+      </script>
+      <script>
+         /* When the user clicks on the button, 
+         toggle between hiding and showing the dropdown content */
+         function myFunction() {
+         document.getElementById("myDropdown").classList.toggle("show");
+         }
+         
+         // Close the dropdown if the user clicks outside of it
+         window.onclick = function(event) {
+         if (!event.target.matches('.dropbtn')) {
+         var dropdowns = document.getElementsByClassName("dropdown-content");
+         var i;
+         for (i = 0; i < dropdowns.length; i++) {
+         var openDropdown = dropdowns[i];
+         if (openDropdown.classList.contains('show')) {
+         openDropdown.classList.remove('show');
+         }
+         }
+         }
+         }
+      </script>
+   </body>
+</html>

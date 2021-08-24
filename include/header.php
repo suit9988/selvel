@@ -6,7 +6,9 @@ $cartObj = new Cart;
 $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 ?>
 <style>
-	.typeahead li {}
+	.typeahead li {
+		display: block;
+	}
 
 	.typeahead {
 		display: block !important
@@ -89,6 +91,18 @@ $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 	{
 	    max-width:600px;
 	}
+	@media only screen and (max-width: 767px) {
+		.logo img {
+			max-width: 120px;
+		}
+		#cart-text-show{
+			display:none;
+		}
+		
+		#cart-icon-show{
+			display:block;
+		}	  
+	}
 </style>
 <!-- Loader start -->
 <div id="loader-wrapper">
@@ -168,9 +182,7 @@ $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 </div>
 <!-- Loader end -->
 <div class="wrapper">
-	<header class="<?php if ($loggedInUserDetailsArr = $functions->sessionExists()) {
-						echo 'afteloginstyle';
-					} ?>">
+	<header class="<?php if ($loggedInUserDetailsArr = $functions->sessionExists()) { echo 'afteloginstyle';	} ?>">
 		<div id="top-bar">
 			<div class="flex">
 				<div class="left-top" style="height: 23px; width: 100%; text-align: center">
@@ -190,33 +202,32 @@ $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 							<div class="main_menu menu_two menu_position">
 								<nav>
 									<ul>
-										<li <?php if ($currentPage == 'index.php') {
-												echo 'class="active"';
-											} ?>><a href="<?php echo BASE_URL; ?>"> <img src="https://solvoix.xyz/selvel/images/icons8-home-50.png" style="width:26px;margin-top:-9px"></a></li>
+										<li <?php if ($currentPage == 'index.php') { echo 'class="active"';	} ?>><a href="<?php echo BASE_URL; ?>"> <img src="https://solvoix.xyz/selvel/images/icons8-home-50.png" style="width:26px;margin-top:-9px"></a></li>
 										<?php
 										$getMainCategoryList = $functions->getMainCategories();
 										$getProductCategoryMapping = $functions->fetch($functions->query("SELECT * FROM " . PREFIX . "product_category_mapping"));
 										while ($rowCategoryList = $functions->fetch($getMainCategoryList)) {
 											$categotyIdHeader = $rowCategoryList['id'];
 											$getSubCategoryList = $functions->getSubCategoryByCategoryId($categotyIdHeader);
-										?>
+											// print_r($rowCategoryList);
+											?>											
 											<li class="<?php if ($currentPage == 'listing.php' || $currentPage == 'details.php') {
-															//echo "active";
-														} ?> ">
+												echo 'active';
+											} ?> ">
 												<a href="<?php echo BASE_URL; ?>/<?php echo $rowCategoryList['permalink']; ?>"><?php echo $rowCategoryList['category_name']; ?> </a>
-
+											
 												<div class="mega_menu">
 													<ul class="mega_menu_inner">
 														<li style="list-style: none;width: 50%;">
 															<ul class="sub-meu-list-style">
 																<?php
-																while ($rowSubCategoryList = $functions->fetch($getSubCategoryList)) {
+																	while ($rowSubCategoryList = $functions->fetch($getSubCategoryList)) {																		
+
+																		?>
+																		<li style="list-style: none;width: 50%;margin-left: 50px;"><a href="<?php echo BASE_URL; ?>/<?= $rowCategoryList['permalink'] ?>/<?= $rowSubCategoryList['permalink'] ?>"><?= $rowSubCategoryList['category_name'] ?></a></li>
+																		<?php
+																	}
 																?>
-																	<li style="list-style: none;width: 50%;margin-left: 50px;"><a href="<?php echo BASE_URL; ?>/<?= $rowCategoryList['permalink'] ?>/<?= $rowSubCategoryList['permalink'] ?>"><?= $rowSubCategoryList['category_name'] ?></a></li>
-																<?
-																}
-																?>
-																
 																<li style="list-style: none;width: 33%;margin-left: 50px;"><a id="shop_all_text" href="<?php echo BASE_URL; ?>/<?= $rowCategoryList['permalink'] ?>" >Shop All <i class="fa fa-long-arrow-right"></i></a></li>
 															</ul>
 														</li>
@@ -228,7 +239,9 @@ $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 													</ul>
 												</div>
 											</li>
-										<?php	} ?>
+										<?php
+										}	
+										?>
 									</ul>
 								</nav>
 							</div>
@@ -254,57 +267,30 @@ $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 											<i class="fa fa-heart-o"></i>
 										</a>
 									</div>
-								</div>
-								<!--<div class="search_container">
-										<form action="#">
-											<div class="search_box">
-												<input placeholder="Search product..." type="text">
-												<button type="submit"><i class="glyphicon glyphicon-search"></i></button>
-											</div>
-										</form>
-									</div>-->
+								</div>							
 								<div class="header_account_area header_account_area2">
 									<div class="header_account-list header_wishlist">
-										<a class="no_unline svg-icon">
-											<!--<i class="glyphicon glyphicon-search"></i>--> 
-											<!-- <img src="https://solvoix.xyz/selvel/search-icon.png" style="width:26px"> -->
-											<!--<i class="fa fa-search"></i>-->
+										
 											<svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-search fa-w-16 fa-3x"><path fill="currentColor" d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" class=""></path></svg>
 										</a>
 									</div>
-									<?
-									ob_start();
-									$cartObj = new Cart;
-									$cartArr = $cartObj->getCart();
-
-
-
-									if ($cartArr) {
-										foreach ($cartArr as $oneProduct) {
-											$qty_bw = $oneProduct['quantity'];
-										}
-									} else {
+									<?php
+										ob_start();
 										$qty_bw = 0;
-									}
-									?>
-									<style>
-									@media only screen and (max-width: 767px) {
-										.logo img {
-											max-width: 120px;
-										}
-										#cart-text-show{
-											display:none;
-										}
-										
-										#cart-icon-show{
-											display:block;
-										}	  
-									}
-									</style>
+										$cartObj = new Cart;
+										$cartArr = $cartObj->getCart();
+										if ($cartArr) {
+											foreach ($cartArr as $oneProduct) {
+												$qty_bw = $oneProduct['quantity'];
+											}
+										} else {
+											$qty_bw = 0;
+										}	
+									?>	
 									<div class="header_account-list  mini_cart_wrapper" style="max-width:600px;">
 										<a id="cart-text-show" href="javascript:void(0)">Cart (<?= $qty_bw ?>)</a>
 										<a  id="cart-icon-show" href="javascript:void(0)">
-											<!-- <img style="margin-top: -5px;" height="30px" src="https://solvoix.xyz/selvel/cart_icon.png"> -->
+											
 											<i class="fa fa-shopping-cart"></i>
 										</a>
 										<!--mini cart-->
@@ -317,70 +303,78 @@ $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 												$totalPrice = 0;
 												$totaltaxamount = 0;
 												$totalWeight = 0;
-												foreach ($cartArr as $oneProduct) {
-													$cartProductDetail = $functions->getUniqueProductById($oneProduct['productId']);
-
-													//$productBanner = $functions->getImageUrl('products',$cartProductDetail['main_image'],'crop','');
-
-													$getProductsizeDetails = $functions->fetch($functions->query("SELECT * FROM " . PREFIX . "product_sizes WHERE product_id='" . $oneProduct['productId'] . "' AND size='" . $oneProduct['size'] . "' and productcolor='" . $oneProduct['color'] . "'"));
-													$currentPageName = pathinfo($_SERVER['PHP_SELF'], PATHINFO_BASENAME); // eg: example.php
-													$productBanner = $functions->getImageUrl('products', $getProductsizeDetails['image1_color'], 'crop', '');
-													if ($currentPageName == "input-group" || (isset($isCartPage) && $isCartPage == "2") || $currentPageName == "chekout-order-summary.php" || $currentPageName == "shipping.php" || $currentPageName == "payment-method.php") {
-														$cartIncrementClass = "checkoutPageIncrementFromCartBtn";
-														$cartDecrementClass = "checkoutPageDecrementFromCartBtn";
-														$cartRemoveClass = "checkoutPageRemoveFromCartBtn";
-
-														$couponCodeApplyId = "applyCouponCodeCheckoutBtn";
-														$couponCodeRemoveId = "removeCouponCodeCheckoutBtn";
-
-														$displayingCheckoutPageCart = true;
-													} else {
-														$cartIncrementClass = "incrementCartBtn";
-														$cartDecrementClass = "decrementCartBtn";
-														$cartRemoveClass = "removeFromCartBtn";
-
-														$couponCodeApplyId = "applyCouponCodeCartBtn";
-														$couponCodeRemoveId = "removeCouponCodeCartBtn";
-
-														$displayingCheckoutPageCart = false;
-													}
-													if (!empty($getProductsizeDetails['customer_discount_price'])) {
-														$discountedPrice = $getProductsizeDetails['customer_discount_price'];
-														$unitPrice = $discountedPrice;
-														$price = $discountedPrice * $oneProduct['quantity'];
-														unset($discountedPrice);
-													} else {
-														$unitPrice = $getProductsizeDetails['customer_price'];
-														$price = $getProductsizeDetails['customer_price'] * $oneProduct['quantity'];
-													}
-
-													$totalWeight = $totalWeight + $getProductsizeDetails['weight'];
-													$tax = $cartProductDetail['tax'];
-													$taxAmount = $price * ($tax / 100);
-													//$price = $price + $taxAmount;
-													$price1 = $price;
-													$subTotal += $price1; //productprice
-													$taxAmount1 += $taxAmount;
-												?>
-													<div class="cart_item">
-														<div class="cart_img">
-															<a href="#"><img src="<?php echo $productBanner; ?>" alt=""></a>
-														</div>
-														<div class="cart_info">
-															<a href="#"><?= $cartProductDetail['product_name'] ?></a>
-															<p><?php echo $oneProduct['quantity']; ?> x <span> <i class="fa fa-rupee"></i> <?= $price ?></span></p>
-														</div>
-														<div class="cart_remove">
-															<input type="hidden" name="productNo" value="<?php echo $cartProductDetail['id']; ?>" />
-															<input type="hidden" name="size" value="<?php echo $oneProduct['size']; ?>" />
-															<input type="hidden" name="color" value="<?php echo $oneProduct['color']; ?>" />
-															<input type="hidden" value="<?php echo $getProductsizeDetails['available_qty']; ?>" name="available_qty" class="available_qty" />
-															<input type="hidden" value="<?php echo $getProductsizeDetails['customer_discount_price']; ?>" name="price" class="price" />
-															<button class="delete-btn <?php echo $cartRemoveClass; ?>" style="background: #fff;border: none;" data-id="<?php echo $cartProductDetail['id']; ?>"><i class="fa fa-times"></i></button>
-														</div>
-													</div>
-												<?php
+												// if ($cartArr) {
+												    foreach ($cartArr as $oneProduct) {
+    													$cartProductDetail = $functions->getUniqueProductById($oneProduct['productId']);
+    
+    													//$productBanner = $functions->getImageUrl('products',$cartProductDetail['main_image'],'crop','');
+    
+    													$getProductsizeDetails = $functions->fetch($functions->query("SELECT * FROM " . PREFIX . "product_sizes WHERE product_id='" . $oneProduct['productId'] . "' AND size='" . $oneProduct['size'] . "' and productcolor='" . $oneProduct['color'] . "'"));
+    													$currentPageName = pathinfo($_SERVER['PHP_SELF'], PATHINFO_BASENAME); // eg: example.php
+    													$productBanner = $functions->getImageUrl('products', $getProductsizeDetails['image1_color'], 'crop', '');
+    													if ($currentPageName == "input-group" || (isset($isCartPage) && $isCartPage == "2") || $currentPageName == "chekout-order-summary.php" || $currentPageName == "shipping.php" || $currentPageName == "payment-method.php") {
+    														$cartIncrementClass = "checkoutPageIncrementFromCartBtn";
+    														$cartDecrementClass = "checkoutPageDecrementFromCartBtn";
+    														$cartRemoveClass = "checkoutPageRemoveFromCartBtn";
+    
+    														$couponCodeApplyId = "applyCouponCodeCheckoutBtn";
+    														$couponCodeRemoveId = "removeCouponCodeCheckoutBtn";
+    
+    														$displayingCheckoutPageCart = true;
+    													} else {
+    														$cartIncrementClass = "incrementCartBtn";
+    														$cartDecrementClass = "decrementCartBtn";
+    														$cartRemoveClass = "removeFromCartBtn";
+    
+    														$couponCodeApplyId = "applyCouponCodeCartBtn";
+    														$couponCodeRemoveId = "removeCouponCodeCartBtn";
+    
+    														$displayingCheckoutPageCart = false;
+    													}
+    													if (!empty($getProductsizeDetails['customer_discount_price'])) {
+    														$discountedPrice = $getProductsizeDetails['customer_discount_price'];
+    														$unitPrice = $discountedPrice;
+    														$price = $discountedPrice * $oneProduct['quantity'];
+    														unset($discountedPrice);
+    													} else {
+    														$unitPrice = $getProductsizeDetails['customer_price'];
+    														$price = $getProductsizeDetails['customer_price'] * $oneProduct['quantity'];
+    													}
+    
+    													$totalWeight = $totalWeight + $getProductsizeDetails['weight'];
+    													$tax = $cartProductDetail['tax'];
+    													$taxAmount = $price * ($tax / 100);
+    													//$price = $price + $taxAmount;
+    													$price1 = $price;
+    													$subTotal += $price1; //productprice
+    													$taxAmount1 += $taxAmount;
+    												?>
+    													<div class="cart_item">
+    														<div class="cart_img">
+    															<a href="#"><img src="<?php echo $productBanner; ?>" alt=""></a>
+    														</div>
+    														<div class="cart_info">
+    															<a href="#"><?= $cartProductDetail['product_name'] ?></a>
+    															<p><?php echo $oneProduct['quantity']; ?> x <span> <i class="fa fa-rupee"></i> <?= $price ?></span></p>
+    														</div>
+    														<div class="cart_remove">
+    															<input type="hidden" name="productNo" value="<?php echo $cartProductDetail['id']; ?>" />
+    															<input type="hidden" name="size" value="<?php echo $oneProduct['size']; ?>" />
+    															<input type="hidden" name="color" value="<?php echo $oneProduct['color']; ?>" />
+    															<input type="hidden" value="<?php echo $getProductsizeDetails['available_qty']; ?>" name="available_qty" class="available_qty" />
+    															<input type="hidden" value="<?php echo $getProductsizeDetails['customer_discount_price']; ?>" name="price" class="price" />
+    															<button class="delete-btn <?php echo $cartRemoveClass; ?>" style="background: #fff;border: none;" data-id="<?php echo $cartProductDetail['id']; ?>"><i class="fa fa-times"></i></button>
+    														</div>
+    													</div>
+    												<?php
+    												}
+    												/*
+												}else{
+												    ?>
+												    
+												    <?php
 												}
+												*/
 												?>
 											</div>
 											<div class="mini_cart_table">
@@ -409,17 +403,19 @@ $amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
 										<!--mini cart end-->
 										
 									</div>
+									
+									<!---->
 								</div>
-							</div>
+							</div>                          
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</header>
-	<!--mini cart-->
+	
 	<?php
-	$ac = "";
+	$show_sidebar=$ac = "";
 	ob_start();
 	$cartObj = new Cart;
 	$cartArr = $cartObj->getCart();
