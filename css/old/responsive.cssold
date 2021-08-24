@@ -1,0 +1,253 @@
+/* ==== Media Queries ===== */
+@media (max-width:1300px) and (min-width:1200px) {
+	.container {
+	    width: 90%;
+	}
+
+}
+
+@media (max-width:600px) {
+	.coming-soon-page {
+	    background: #432e8b;
+	}
+	.coming-soon-page img.mapimgs {
+	    width: 100%;
+	    height: auto;
+	    object-fit: cover;
+	    position: absolute;
+	    top: 50%;
+	    transform: translateY(-50%);
+	}
+	a.instacklas {	   
+	   position: absolute;
+	   bottom: 38%;
+	   left: 40%;
+
+	}
+	a.fbclass {
+	    position: absolute;
+	    bottom: 38%;
+	    left: 53%;
+	}
+	a.instacklas img, a.fbclass img {
+	    width: 20px;
+	}
+}
+@media (max-width:1290px) {
+	.banner-img-slide:after {
+	    content: url(../images/banner-shadow.png);
+	    position: absolute;
+	    bottom: 52px;
+	    right: 0;
+	    z-index: -1;
+	    filter: drop-shadow(2px 4px 6px black);
+	}
+}
+@media (max-width:1300px) {
+	.flex-why {
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between;
+	    width: 95%;
+	    border-top: 1px solid #eeeeee3b;
+	    margin-top: 4%;
+	    padding-top: 5%;
+	    padding-right: 12%;
+	    margin-bottom: 5%;
+	}
+	.become-text h2.why-title {	    
+	    font-size: 70px;
+	}
+	.become-text h2.why-title,section#explore-section h2.why-title,.banner-inner h2, .img-flex h2{
+		font-size: 58px;
+	}
+	h2.why-title {	
+	    font-size: 50px;
+	}
+	.prods-desc h2{
+		font-size: 20px;
+	}
+	.prods-price span {
+	   font-size: 18px;
+	       line-height: 10px;
+	}
+	.flexwidop img.img-full {
+	    height: 100%;
+	}
+	.text-flex h2, h2.product-name{
+	    font-size: 34px;
+	    line-height: 36px;
+	}
+	span.actual-rate-price{
+		font-size: 30px;
+		line-height: 34px;
+	}
+	.menu-section {
+	    width: 80%;
+	    margin: 30px auto;
+	}
+	.menu-section {
+	  width: 74%
+	    margin: 30px auto;
+	    margin-top: 20px;
+	}
+	.menu-section ul li a {
+	    font-size: 12px;	    
+	    padding: 4px 30px;
+	}
+	.menu-section ul li a:after {
+	    right: -20px;
+	}
+	.flex-itemvala h2 {
+	    font-size: 70px;
+	}
+	
+	.mega-menu-flex.about-mega h2 {
+    font-size: 22px;
+}
+	.logo.flex-center img {
+	    width: 90%;
+	}
+	.logo-menu {	 
+	    margin-bottom: 10px;
+	}
+	.menu-section .form-group input[type="text"] {
+	    width: 175px;
+	    font-size: 14px;
+	}
+	section#become-dstri {	    
+	    padding-top: 4%;
+	}
+	.become-text {	 
+	    padding-top: 3%;
+	}
+	.become-text h3{
+		margin-bottom: 10px;
+	}
+	.menu-section .form-group button {
+	    height: 28px;
+	    font-size: 14px;
+	}
+	.form-become {
+	    width: 90%;
+	}
+	.banner-img-slide img {
+	    width: 500px;
+	}
+	.become-text:after {	    
+	    right: -30px;
+	    bottom: 0px;	    
+	}
+	.w45.become-image{
+		width: 45%;
+		position: relative;
+	}
+	.w55.become-text {	    
+	    width: 55%;
+	    padding-bottom: 6%;
+	}
+	.w45.become-image img {
+	    width: 87%;
+	    position: absolute;
+	    left: -8px;
+	    bottom: 0;
+	}
+	.form-become {
+	    width: 90%;
+	}
+	.footer-links ul a {	    
+	    font-size: 16px;
+	}
+	img.img-full-iop {
+	    width: 80%;
+	}
+	.flrexc-sp {
+	    padding: 0px 40px;
+	    margin-bottom: 4%;
+	}
+	.cjsop h4{
+		width: 75%;
+		font-size: 20px;
+	}
+	.scroll p {
+	    font-size: 18px;
+	    line-height: 32px;
+	}
+	.scroll {
+	    height: 620px;
+	}
+	.timline-images img {
+	    width: 80%;
+	}
+	.timeline-text h3,.timeline-text h2 {
+	    font-size: 34px;
+	    line-height: 40px;
+	}
+	.timeline-text p {
+    	font-size: 18px;
+	}
+	form#login-form label {
+	   font-size: 15px;
+	   line-height: 42px;
+	   color: #464646;
+	   font-weight: 700;
+	   text-transform: uppercase;
+	}
+	.myaddressbook .field-btn-grp {
+	    width: 82%;
+	}
+	.show-here-sub .show-here-data {
+	    font-size: 16px;
+	}
+	.sub-ttl-title b {
+	    font-size: 16px;
+	    font-weight: 600;
+	}
+	label.radio-container {
+	    font-size: 16px;
+	}
+	.cart-sub-total p.sub-ttl-title.pull-right.width30 {
+	    font-size: 16px;
+	    color: #5a5858;
+	}
+	.chekout-order-summary-page p.sub-ttl-title.pull-right.rs-span.width30 {
+	    color: #5a5858;
+	}
+	.ttl-div span.span-ttl-rs.width30 {
+	    font-weight: 600;
+	    color: #5a5858;
+	}
+	span.span-ttl.span-ttl-rs {
+	    font-size: 16px;
+	    color: #242424;
+	    font-weight: 400;
+	    font-family: "Roboto Condensed";
+	    margin-right: 2.8%;
+	}
+}
+
+@media (max-width:1024px) {
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+@media (max-width:767px) {
+}
+
+@media only screen and (max-width:600px){
+}
+
+@media (max-width:480px) {
+}
+
+@media only screen and (max-width:395px) {
+
+}
+
+@media only screen and (max-width:360px) {
+}
+
+@media (max-width:320px) {
+    
+}

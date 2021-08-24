@@ -1,0 +1,303 @@
+/*
+Theme Name: Selvel
+
+*/
+
+/*--------------------------------------------------------------
+# Normalize
+--------------------------------------------------------------*/
+html {
+	font-family: sans-serif;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust:     100%;
+}
+
+body {
+	margin: 0;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+	display: block;
+}
+
+audio,
+canvas,
+progress,
+video {
+	display: inline-block;
+	vertical-align: baseline;
+}
+
+audio:not([controls]) {
+	display: none;
+	height: 0;
+}
+
+[hidden],
+template {
+	display: none;
+}
+
+a {
+	background-color: transparent;
+}
+
+a:active,
+a:hover {
+	outline: 0;
+}
+
+abbr[title] {
+	border-bottom: 1px dotted;
+}
+
+b,
+strong {
+	font-weight: bold;
+}
+
+dfn {
+	font-style: italic;
+}
+
+h1 {
+	font-size: 2em;
+	margin: 0.67em 0;
+}
+
+mark {
+	background: #ff0;
+	color: 1000;
+}
+
+small {
+	font-size: 80%;
+}
+
+sub,
+sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+
+sup {
+	top: -0.5em;
+}
+
+sub {
+	bottom: -0.25em;
+}
+
+img {
+	border: 0;
+}
+
+svg:not(:root) {
+	overflow: hidden;
+}
+
+figure {
+	margin: 0;
+	max-width: 100%;
+}
+
+hr {
+	box-sizing: content-box;
+	height: 0;
+}
+
+pre {
+	overflow: auto;
+}
+
+code,
+kbd,
+pre,
+samp {
+	font-family: monospace, monospace;
+	font-size: 1em;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+	color: inherit;
+	font: inherit;
+	margin: 0;
+}
+
+button {
+	overflow: visible;
+}
+
+button,
+select {
+	text-transform: none;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+	-webkit-appearance: button;
+	cursor: pointer;
+}
+
+button[disabled],
+html input[disabled] {
+	cursor: default;
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+input {
+	line-height: normal;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+	box-sizing: border-box;
+	padding: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	height: auto;
+}
+
+input[type="search"] {
+	-webkit-appearance: textfield;
+}
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+fieldset {
+	border: 1px solid #c0c0c0;
+	margin: 0 2px;
+	padding: 0.35em 0.625em 0.75em;
+}
+
+legend {
+	border: 0;
+	padding: 0;
+}
+
+textarea {
+	overflow: auto;
+}
+
+optgroup {
+	font-weight: bold;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+td,
+th {
+	padding: 0;
+}
+
+.togglemenus{
+	display:none;
+}
+
+@media screen and (max-width:600px){
+
+	.togglemenus {
+		    width: 9%;
+	    display: block;
+	    margin: 0;
+	    position: absolute;
+	    left: 15px;
+	}
+	.togglemenus span {
+		width: 100%;
+		display: block;
+		height: 3px;
+		border-radius: 5px;
+		background: #fff
+	}
+	.togglemenus span:nth-child(2) {
+		margin: 5px 0
+	}
+
+	.site-branding.col-sm-12.col-xs-12{
+		display:flex;
+		align-items:center;
+		justify-content:center;
+		position:relative;
+	}
+
+	.menu-menu-container{
+		width: 70%;
+	    position: fixed;
+	    height: 100%;
+	    background: #574498;
+	    top: 0;
+	    margin: 0;
+	    left: -70%;
+	    padding: 20px;
+	    overflow-y: scroll;
+	    transition: .5s all ease-in-out;
+	    display:block !important;
+	}
+
+	.menu-menu-container.slide{
+		left:0;
+	    transition: .5s all ease-in-out;
+	}
+
+	.menu-menu-container ul li {
+	    width: 100%;
+	    padding: 0;
+	    margin: 0 0 10px;
+	    position: relative;
+	    border:0;
+	}
+
+	.menu-menu-container ul li a {
+	    width: 100%;
+	    display: block;
+	    line-height: 22px;
+	    margin: 0;
+	    padding: 10px 15px;
+	    color: #fff;
+	    font-size:16px;
+	    font-size: 16px;
+    	text-transform: capitalize;
+    	font-weight: 500;
+    	font-family: "DaxlinePro-Medium";
+    	letter-spacing: 5px !important;
+	}
+
+	li.menu-item.menu-item-type-custom.menu-item-object-custom.current-menu-item.current_page_item.menu-item-home.menu-item-46 a{
+
+    	background:#574498 !important;
+    	color:#fff !important;
+	}
+}

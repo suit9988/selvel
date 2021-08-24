@@ -1,0 +1,228 @@
+<!DOCTYPE>
+<html>
+   <head>
+      <title>SELVEL - Checkout</title>
+      <meta name="description" content="SELVEL">
+      <meta name="keywords" content="SELVEL">
+      <meta name="author" content="SELVEL">
+      <?php include("include/header-link.php");?>
+   </head>
+   <body class="inner-page dashboard-pages" id="address-book">
+      <!--Top start menu head-->       
+      <?php include("include/header.php");?>
+      <!--Main Start Code Here-->
+      <main class="main-inner-div">
+         <img src="images/details-banner-header.jpg" class="img-full fixedimg">        
+         <div class="container breadcum-header">
+            <ul>
+               <li>
+                  <a href="#">Home</a>
+                  <i class="fa fa-angle-right"></i>
+               </li>
+               <li>
+                  <a href="#" class="current-page">Checkout</a>                  
+               </li>
+            </ul>
+         </div>
+         <div class="inner-wrapper">
+            <!-- <h1 class="page-heading">CHECKOUT</h1> -->
+            <section class="billing-shipping">
+               <div class="billing-add match">
+                  <div class="box-inner-ctn">
+                     <h3>Billing Address</h3>
+                     <div class="show-here-add">
+                        <div class="show-here-sub">
+                           <div class="show-here-head">
+                              Name
+                           </div>
+                           <div class="show-here-data">
+                              Bhavik                                 
+                           </div>
+                        </div>
+                        <div class="show-here-sub">
+                           <div class="show-here-head">
+                              Address
+                           </div>
+                           <div class="show-here-data">
+                              403, Palm Spring, W wing, Malad west, <br>link Road, Kandiwali East, Mumbai -400 101                                 
+                           </div>
+                        </div>
+                     </div>
+                     <a class="checkout-summery-pop" data-fancybox="" data-type="iframe" data-src="" href="https://www.paperpanda.co/demo/checkout-summery-popup.php?Billing=Billing">
+                     Change Address 
+                     <span><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                     </a>
+                     <p id="billError" style="color:red;"></p>
+                  </div>
+               </div>
+               <div class="shipping-add match">
+                  <div class="box-inner-ctn">
+                     <h3>Shipping Address</h3>
+                     <a class="checkout-summery-pop" data-fancybox="" data-type="iframe" data-src="" href="https://www.paperpanda.co/demo/checkout-summery-popup.php?shipping=shipping">
+                     Select Address 
+                     <span><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                     </a>
+                     <p id="shipError" style="color:red;"></p>
+                     <div class="same-as-billing">
+                        <label class="container-ck">
+                        <input type="checkbox" value="1" name="sameAsBilling"> Same as Billing Address
+                        <span class="checkmark-ck"></span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+            </section>
+            <div id="checkout-cart-wrapper">
+               <section class="order-summery">
+                  <div class="cart-table-responsive">
+                     <table class="table">
+                        <thead>
+                           <tr>
+                              <th>Item</th>
+                              <th>Product Name</th>
+                              <th>Quantity</th>
+                              <th>Unit Price</th>
+                              <th>Tax</th>
+                              <th>Price</th>
+                              <th></th>
+                           </tr>
+                        </thead>
+                        <tbody class="cart_details">
+                           <tr>
+                              <td>
+                                 <div class="item-thumb">
+                                    <img src="https://www.paperpanda.co/demo/images/products/1593691217-1_crop.jpg" alt="">
+                                 </div>
+                              </td>
+                              <td>
+                                 <ul class="product-name">
+                                    <li>Calculator Notebook                                  
+                                    </li>
+                                 </ul>
+                              </td>
+                              <td class="input-group1">
+                                 <div class="input-num">
+                                    <ul class="list-inline">
+                                       <li><button type="button" class="btn-number checkoutPageDecrementFromCartBtn" disabled="disabled" data-type="minus" data-field="qty[1]">-</button></li>
+                                       <li><input type="number" id="number" name="qty[1]" class="number percent_amount cartQty" value="1" min="1" max="50" readonly=""></li>
+                                       <li><button type="button" class="btn-number checkoutPageIncrementFromCartBtn" data-type="plus" data-field="qty[1]">+</button></li>
+                                    </ul>
+                                 </div>
+                                 <input type="hidden" name="productNo" value="1">
+                                 <input type="hidden" value="50" name="available_qty" class="available_qty">
+                              </td>
+                              <td>
+                                 <p>
+                                    <!-- <i class="fa fa-inr" aria-hidden="true"></i> --> Rs.980
+                                 </p>
+                              </td>
+                              <td>
+                                 <ul>
+                                    <div class="product-name">
+                                       <p>18 % </p>
+                                    </div>
+                                 </ul>
+                              </td>
+                              <td>
+                                 <ul>
+                                    <div class="product-name">
+                                       <p>
+                                          <!-- <i class="fa fa-inr" aria-hidden="true"></i> --> Rs.1156.4
+                                       </p>
+                                    </div>
+                                 </ul>
+                              </td>
+                              <td><button class="delete-btn checkoutPageRemoveFromCartBtn" data-id="1"><i class="fa fa-trash"><i></i></i></button></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+                  <div class="cart-tatal-sec">
+                     <div class="cart-total text-right">
+                        <div class="cart-sub-total">
+                           <p class="sub-ttl-title pull-right width30">
+                              <b>
+                                 <!-- <i class="fa fa-inr" aria-hidden="true"></i> --> Rs.1156.4
+                              </b>
+                           </p>
+                           <p class="sub-ttl-title pull-right">Sub Total</p>
+                           <div class="clearfix"></div>
+                        </div>
+                        <div>
+                           <form class="apply-coupon-form">
+                              <div class="input-group input-group1">
+                                 <input id="coupon-code" type="text" class="form-control" name="couponCode" placeholder="Enter Your Coupon Code">
+                                 <span class="input-group-addon coupon-addon applyCouponCodeCheckoutBtn">Apply</span>
+                                 <div class="clearfix"></div>
+                              </div>
+                              <p class="couponErrorMsg" style="color: rgb(255, 0, 0);"></p>
+                           </form>
+                        </div>
+                        <div class="summery cart-delivery ">
+                           <p class="sub-ttl-title pull-right rs-span width30">
+                              <!-- <i class="fa fa-inr" aria-hidden="true"></i> -->  Rs.<b>0</b>
+                           </p>
+                           <p class="sub-ttl-title pull-right delivery">Delivery</p>
+                           <div class="clearfix"></div>
+                        </div>
+                        <div class="ttl-div">
+                           <span class="span-ttl span-ttl-rs">Total </span> 
+                           <span class="span-ttl-rs width30">
+                              <!-- <i class="fa fa-inr" aria-hidden="true"></i> --> Rs.1156.4
+                           </span>
+                        </div>
+                        <div class="payment-mode">
+                           <ul class="list-inline">
+                              <li>
+                                 Payment Method
+                              </li>
+                              <li style="display: none">
+                                 <label class="radio-container" for="online">COD
+                                 <input type="radio" id="online" name="payment_method" value="COD" class="pay">
+                                 <span class="checkmark"></span>
+                                 </label>
+                              </li>
+                              <li>
+                                 <label class="radio-container" for="cod">Online Payment
+                                 <input type="radio" id="cod" checked="checked" name="payment_method" value="Online" class="pay">
+                                 <span class="checkmark"></span>
+                                 </label>
+                              </li>
+                           </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="checkout-btns">
+                           <a href="https://www.paperpanda.co/demo" class="shop-now-btn dark-yellow-btn text-center">Continue Shopping</a>
+                           <a href="javascript:;" class="shop-now-btn purple-btn text-center" id="proceedCheckout">Proceed to CheckOut</a>   
+                        </div>
+                     </div>
+                  </div>
+               </section>
+            </div>
+         </div>
+      </main>
+      <!--Main End Code Here-->
+      <!--footer start menu head-->
+      <?php include("include/footer.php");?> 
+      <!--footer end menu head-->
+      <?php include("include/footer-link.php");?>
+      <script type="text/javascript">
+         $('.checkout-summery-pop').fancybox({
+                  iframe : {
+                     css : {
+                        width : '424',
+                        height : '438'
+                     }
+                  },
+                  buttons : [
+                  
+                     'close'
+                  ],
+                  afterClose: function () {
+                     parent.location.reload(true);
+                  }
+               });
+      </script>
+   </body>
+</html>

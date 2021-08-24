@@ -1,0 +1,199 @@
+<?php
+  $basename = basename($_SERVER['REQUEST_URI']);
+  $currentPage = pathinfo($_SERVER['PHP_SELF'], PATHINFO_BASENAME);
+  include_once("include/classes/Cart.class.php");
+	$cartObj = new Cart;
+	$amtArr = $functions->getCartAmountAndQuantity($cartObj, null);
+  ?> 
+  <style>
+  .typeahead li{}
+  .typeahead{display:block !important}
+  
+  .cart-notification {
+      width: auto;
+      padding: 0 30px;
+      left: 80%;
+      top: 0;
+      margin: 77px 0;
+      text-align: center;
+      transition: all .5s ease-in-out;
+      -webkit-transition: all .5s ease-in-out;
+      -moz-transition: all .5s ease-in-out;
+      -o-transition: all .5s ease-in-out;
+      position: fixed;
+      z-index: 99999997;
+      background: #fff;
+      border-radius: 0;
+      border: 0;
+      color: #431a92;
+      box-shadow: 0px 3px 7px #c9c9c9, -11px -11px 14px #7269880d;
+  }
+  .cart-notification-container.alert {
+    margin: 0px;
+    font-weight: bold;
+    padding: 10px 30px;
+}
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+.fadeInDown {
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+}
+  </style>
+<!-- Loader start -->
+<div id="loader-wrapper">
+	<div class="loader">            
+		<img src="<?php echo BASE_URL; ?>/images/logo.png">
+		<h2>Please Wait</h2>
+	</div>
+</div>
+<!-- Loader end -->
+<div class="wrapper">	
+	<header class="<?php if($loggedInUserDetailsArr = $functions->sessionExists()){ echo 'afteloginstyle'; }?>">
+		 <div id="top-bar">
+		 	<div class="flex">
+		 		<div class="left-top align-right w55">
+		 			<p>
+		 				<strong>FREE SHIPPING</strong> FOR ORDERS OVER<i class="fa fa-rupee"></i><span class="pprice">2,000</span>/-</p>
+		 		</div>
+		 		<div class="right-top w45">
+		 			<ul class="flex">
+		 				<li>
+		 					<a data-fancybox data-src="#pdfcatelog" href="javascript:;">E-Catelogue <i class="fa fa-download"></i></a>
+		 				</li>
+		 				<li>
+		 					<a href="<?php echo BASE_URL; ?>/contact-us.php">Contact</a>
+		 				</li>
+		 				<li>
+							<?php if($loggedInUserDetailsArr = $functions->sessionExists()){ ?>
+								<a class ="after-login"  href="<?php echo BASE_URL; ?>/my-account.php">My Account</a>		 					
+							<?php }else{ ?>
+								<a class="before-login" data-fancybox data-src="#sign-in-pop" href="javascript:;">join/login</a>
+							<?php } ?>
+		 				</li>
+						 <?php if($loggedInUserDetailsArr = $functions->sessionExists()){ ?>
+						 <li>
+		 					<a href="<?php echo BASE_URL; ?>/logout.php">Logout</a>
+		 				</li>
+						
+						 <?php } ?>
+						 <li>
+		 					<a href="<?php echo BASE_URL; ?>/cart.php"><span class="clickCartHere">
+		 						<i class="fa fa-shopping-cart"></i> (<span class="cart-quantity-count"><?php echo $amtArr['items']; ?></span>)
+		 					</span></a>
+		 				</li>
+		 			</ul>
+		 		</div>
+		 	</div>
+		 </div>
+		 <div class="logo-menu">
+		 	<div class="logo flex-center">
+		 		<a href="<?php echo BASE_URL; ?>/index.php">
+		 			<img src="<?php echo BASE_URL; ?>/images/logo.png">
+		 		</a>
+		 	</div>
+		 </div>
+		 <div class="cart-notification fadeInDown animated" style="display: none;">
+			<div class="cart-notification-container alert"></div>
+		</div>
+		 <div class="menu-section">
+		 	<ul>
+		 		<li  <?php if($currentPage=='index.php') { echo 'class="active"'; }?>>
+		 			<a href="<?php echo BASE_URL; ?>/index.php">Home</a>
+		 		</li>
+		 		<li class="dropdown-menu-click  <?php if($currentPage=='listing.php' || $currentPage=='details.php') { echo "active"; }?>">
+		 			<a href="javascript:void(0)">Shop Now</a>
+		 			<div class="dropdon-click site-nav__dropdown meganav shospdsas">
+		 				<div class="mega-menu-flex">
+							 <?php 
+							$getMainCategoryList = $functions-> getMainCategories();
+							$getProductCategoryMapping = $functions->fetch($functions->query("SELECT * FROM ".PREFIX."product_category_mapping"));
+							while($rowCategoryList = $functions->fetch($getMainCategoryList)){
+								$categotyIdHeader = $rowCategoryList['id'];
+								$getSubCategoryList = $functions->getSubCategoryByCategoryId($categotyIdHeader);
+								?>
+								 <div class="scrollbarhai">
+									<A href="<?php echo BASE_URL; ?>/<?php echo $rowCategoryList['permalink']; ?>"><h2><?php echo $rowCategoryList['category_name']; ?></h2></a>
+									<?php
+										while($rowSubCategoryList = $functions->fetch($getSubCategoryList)){
+											echo '<a href="'.BASE_URL.'/'.$rowCategoryList['permalink'].'/'.$rowSubCategoryList['permalink'].'">'.$rowSubCategoryList['category_name'].'</a>';
+										}
+									?>
+								</div>								
+						<?php	} ?>
+							
+		 					<!-- <div>
+		 						<h2>Drink</h2>		 						
+		 						<a href="details.php">Mugs & Tumblers</a>
+		 						<a href="details.php">Water bottles</a>
+		 						<a href="details.php">Beverage bottles</a>
+		 						 <a href="details.php">Seasonal bottles</a> 
+		 						<a href="details.php" class="shopbtn">Etc...</a>
+		 					</div>
+		 					<div>
+		 						<h2>serve</h2>
+		 						<a href="details.php">Bowl</a>
+		 						<a href="details.php">Dummy text</a>
+		 						<a href="details.php">Product name</a>
+		 						<a href="details.php" class="shopbtn">Etc...</a>
+		 					</div>
+		 					<div>
+		 						<h2>store</h2>
+		 						<a href="details.php">Bowl</a>
+		 						<a href="details.php">Dummy text</a>
+		 						<a href="details.php">Product name</a>
+		 						<a href="details.php" class="shopbtn">Etc...</a>
+		 					</div> -->
+		 				</div>
+		 			</div>
+		 		</li>
+		 		<li class="dropdown-menu-click <?php if($currentPage=='about-us.php' || $currentPage=='why-selvel.php') { echo "active"; }?>" >
+		 			<a href="#">About</a>
+		 			<div class="dropdon-click site-nav__dropdown meganav abt-mgeas">
+		 				<div class="mega-menu-flex about-mega">
+		 					<div class="abt-sbt">
+		 						<a href="<?php echo BASE_URL; ?>/about-us.php">
+		 							<img src="<?php echo BASE_URL; ?>/images/about-img1.jpg" class="img-full">
+		 							<h2>About Selvel</h2>
+		 						</a>
+		 					</div>
+		 					<div class="abt-sbt">
+		 						<a href="<?php echo BASE_URL; ?>/why-selvel.php?action=about-section-sub">
+		 							<img src="<?php echo BASE_URL; ?>/images/about-img1.jpg" class="img-full">
+		 							<h2>Why Selvel</h2>
+		 						</a>
+		 					</div>
+		 					<div class="abt-sbt">
+		 						<a href="<?php echo BASE_URL; ?>/why-selvel.php?action=selvel-history">
+		 							<img src="<?php echo BASE_URL; ?>/images/about-img1.jpg" class="img-full">
+		 							<h2>History of Selvel</h2>
+		 						</a>
+		 					</div>
+		 				</div>
+		 			</div>
+		 		</li>
+		 		<li class="explip">
+		 			<a href="<?php echo BASE_URL; ?>/blog" target="_blank">Explore</a>
+		 		</li>
+		 		<li class="no-hover">
+					
+						
+		 			<form autocomplete="off" action="<?php echo BASE_URL; ?>/search"  method="GET" id="searchFrm">
+		 				<div class="form-group">
+		 					<input type="text" name="product_id" placeholder="Search for Product" id="search_text" value="<?php if(isset($_GET['product_id']) && !empty($_GET['product_id'])){ echo $_GET['product_id']; }?>" required>
+		 					<button class="search-icons"  type="submit">
+		 						<i class="fa fa-search"></i>
+		 					</button>
+		 				</div>
+		 			</form>
+		 		</li>
+		 		
+		 	</ul>
+		 </div>
+	</header>
+	 
+	

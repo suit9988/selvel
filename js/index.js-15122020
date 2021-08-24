@@ -1,0 +1,123 @@
+$(document).ready(function(){                         
+  if ($.cookie('preloader')) {         
+      $('#loader-wrapper').hide();         
+      $('.wrapper').show();         
+  } 
+  else 
+  {         
+     $(window).on('load', function () {   
+         $('#loader-wrapper').fadeOut(1000);                           
+      });       
+      $('.wrapper').show();
+      $.cookie('preloader', true, {         
+          path: '/',         
+          expire: 1         
+      });         
+   }                                                                           
+});  
+	//Match title height
+function MatchHeight1() {
+  $('.match')
+    .matchHeight({})
+  ;
+}
+//Functions that run when all HTML is loaded
+$(document).ready(function() {
+  MatchHeight1(); 
+});
+$(document).resize(function() {
+  MatchHeight1(); 
+});
+$(window).scroll(function(){
+  if ($(window).scrollTop() >= 150) {
+    $('header').addClass('sticky');
+  }
+  else {
+    $('header').removeClass('sticky');
+  }
+  });
+
+
+$('.banner-home').slick({
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 2000,
+  speed: 200,
+  dots: true,
+  arrows:false,
+  infinite: true,  
+  fade: true,
+  cssEase: 'linear'
+});
+$('#slider-simmi').slick({
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  // autoplay: true,
+  // autoplaySpeed: 2000,
+  // speed: 200,
+  dots: false,
+  arrows:true,
+  infinite: true
+});
+ $('.slider-reviews').slick({
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: true,
+  dots:false,
+  fade: true,
+  asNavFor: '.slider-reviews-nav'
+});
+
+$('.slider-reviews-nav').slick({
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  fade: true,
+  arrows: false,
+  dots:false,
+  asNavFor: '.slider-reviews'
+});
+
+$("#gallery_01").slick({
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  dots: false,
+  arrows:true,
+  infinite: true
+});
+$(".fp-btn").click(function(){
+   $('.page-heading').text("Forgot Password");
+   $(".login-box").addClass("switch-form");
+});
+$(".back-btn").click(function(){
+   $('.page-heading').text("Login");
+   $(".login-box").removeClass("switch-form");
+   $(".hideOnback").hide();
+});
+$(".passwordtoggle").click(function(){
+   $(this).toggleClass("fa-eye-slash");
+   if ($('.password-show').attr('type') == 'text') {
+      $('.password-show').attr('type', 'password');
+   } else {
+      $('.password-show').attr('type', 'text');
+   }
+});
+
+$(".passwordtoggles").click(function(){
+     $(this).toggleClass("fa-eye-slash");
+     if ($('.password-shows').attr('type') == 'text') {
+        $('.password-shows').attr('type', 'password');
+     } else {
+        $('.password-shows').attr('type', 'text');
+     }
+  });
+
+$("#open-register").click(function(){
+  $("#login-page").slideToggle();
+  $("#register-page").slideToggle();
+});
+
+$("#open-login-here").click(function(){
+  $("#login-page").slideToggle();
+  $("#register-page").slideToggle();
+});

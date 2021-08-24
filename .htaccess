@@ -1,0 +1,44 @@
+RewriteEngine on
+
+RewriteCond %{HTTP_HOST} ^solvoix.xyz/selvel/ [NC]
+RewriteRule ^(.*)$ http://solvoix.xyz/selvel/$1
+
+RewriteCond %{HTTPS} !on
+RewriteRule ^(.*)$ https://solvoix.xyz/selvel/$1 [R=301,L]
+
+
+RewriteRule ^faqs$ "/faqs.php" [NC,L]
+RewriteRule ^index$ "/index.php" [NC,L]
+RewriteRule ^contact-us$ "/contact-us.php" [NC,L]
+RewriteRule ^about-us$ "/about-us.php" [NC,L]
+RewriteRule ^why-selvel$ "/why-selvel.php?action=about-section-sub" [NC,L]
+RewriteRule ^selvel-history$ "/why-selvel.php?action=selvel-history" [NC,L]
+RewriteRule ^faq$ "/faqs.php" [NC,L]
+RewriteRule ^privacy-policy$ "/privacy-policy.php" [NC,L]
+RewriteRule ^refund-policy$ "/refund.php" [NC,L]
+RewriteRule ^my-account$ "/my-account.php" [NC,L]
+RewriteRule ^logout$ "/logout.php" [NC,L]
+RewriteRule ^cart$ "/cart.php" [NC,L]
+RewriteRule ^my-wishlist$ "/my-wishlist.php" [NC,L]
+RewriteRule ^search$ "/search.php" [NC,L]
+RewriteRule ^logout$ "/logout.php" [NC,L]
+RewriteRule ^my-order$ "/my-order.php" [NC,L]
+RewriteRule ^my-address-book$ "/my-address-book.php" [NC,L]
+
+RewriteRule ^([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)/([0-9]+)$  details.php?product_name=$1&product_code=$2&permalink=$3 [QSA]
+
+#RewriteRule  ^([a-zA-Z0-9+_-]+)$ 								listing.php?cat_permalink=$1 [QSA]
+#RewriteRule ^([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)$ 				listing.php?cat_permalink=$1&sub_category_permalink=$2 [L]
+#RewriteRule ^([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)$ 	listing.php?cat_permalink=$1&sub_category_permalink=$2&subSub_category_permalink=$3 [L]
+
+
+#RewriteRule ^([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)$ 				listing.php?cat_permalink=$1&sub_category_permalink=$2 [L]
+
+RewriteRule  ^([a-zA-Z0-9+_-]+)$ 								listingpage-new.php?cat_permalink=$1 [QSA]
+RewriteRule ^([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)$ 				listingpage-new.php?cat_permalink=$1&sub_category_permalink=$2 [L]
+RewriteRule ^([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)$ 	listingpage-new.php?cat_permalink=$1&sub_category_permalink=$2&subSub_category_permalink=$3 [L]
+
+
+RewriteRule ^([a-zA-Z0-9+_-]+)/([a-zA-Z0-9+_-]+)$ 				listingpage-new.php?cat_permalink=$1&sub_category_permalink=$2 [L]
+
+
